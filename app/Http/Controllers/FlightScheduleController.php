@@ -7,6 +7,9 @@ use App\Models\Direction;
 use App\Models\Airline;
 use App\Models\Airplane;
 use App\Models\FlightStatu;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+
 use Illuminate\Http\Request;
 
 class FlightScheduleController extends Controller
@@ -55,6 +58,7 @@ class FlightScheduleController extends Controller
         $flightSchedule->airplane_id = $request->airplane ;
         $flightSchedule->departure_time = $request->departure_time ;
         $flightSchedule->arrival_time = $request->arrival_time ;
+    
         $flight_status = FlightStatu::where('name','Waiting')->first();
         $flightSchedule->flight_status_id = $flight_status->id ;
         $flightSchedule->save();
@@ -98,10 +102,12 @@ class FlightScheduleController extends Controller
     {
         $direction = Direction::find($request->airports);
         $flightSchedule = FlightSchedule::find($id);
-        $flightSchedule->origin_airport_code = $direction->origin_airport_code ;
-        $flightSchedule->destination_airport_code = $direction->destination_airport_code ;
+        $flightSchedule->direction_id = $direction->id ;
+        $flightSchedule->airplane_id = $request->airplane ;
         $flightSchedule->departure_time = $request->departure_time ;
         $flightSchedule->arrival_time = $request->arrival_time ;
+        $flight_status = FlightStatu::where('name','Waiting')->first();
+        $flightSchedule->flight_status_id = $flight_status->id ;
         $flightSchedule->save();
         return redirect()->back()->with('success','The modification was completed successfully.');
     }
