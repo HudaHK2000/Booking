@@ -52,6 +52,28 @@ class FlightScheduleController extends Controller
      */
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            // 'origin_airport_code' => [
+            //     'required',
+            //     Rule::unique('directions', 'origin_airport_code')->where(function ($query) use ($request) {
+            //         return $query->where('destination_airport_code', $request->input('destination_airport_code'));
+            //     })
+            // ],
+            // 'destination_airport_code' => [
+            //     'required',
+            //     'different:origin_airport_code',
+            //     Rule::unique('directions', 'destination_airport_code')->where(function ($query) use ($request) {
+            //         return $query->where('origin_airport_code', $request->input('origin_airport_code'));
+            //     })]
+            ],[
+            // 'origin_airport_code.required'=> 'Please enter the departure airport',
+            // 'destination_airport_code.required' => 'Please enter the arrival airport',
+            // 'origin_airport_code.exists'=> 'Please select the airport name from the list. The airport you chose does not exist in the database',
+            // 'destination_airport_code.exists' => 'Please select the airport name from the list. The airport you chose does not exist in the database',
+            // 'destination_airport_code.different' => 'Please select a different arrival airport than the departure airport',
+            // 'origin_airport_code.unique'=> 'This origin to destination airport combination already exists',
+            // 'destination_airport_code.unique'=> 'This destination from arrival airport combination already exists',
+        ])->validate();
         $direction = Direction::find($request->airports);
         $flightSchedule = new FlightSchedule();
         $flightSchedule->direction_id = $direction->id ;
