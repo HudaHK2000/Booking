@@ -12,9 +12,9 @@ class Direction extends Model
     protected $fillable=['origin_airport_code','destination_airport_code'];
 
     public function originAirport(){
-        return $this->belongsTo('App\Models\Airport','origin_airport_code','airport_code');
+        return $this->belongsTo('App\Models\Airport','origin_airport_code','id');
     }
     public function destinationAirport(){
-        return $this->belongsTo('App\Models\Airport','destination_airport_code','airport_code');
+        return $this->belongsTo('App\Models\Airport','destination_airport_code','id');
     }
 }

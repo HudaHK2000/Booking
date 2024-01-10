@@ -110,24 +110,16 @@ class AirplaneController extends Controller
         $airplane->save();
         return redirect()->back()->with('success', 'The modification was completed successfully.');
     }
-    public function updateAirplaneSeat($id,Request $request)
+    public function updateAirplaneSeat(Request $request)
     {
-        $airplane_seat = AirplaneSeat::find($id);
-        $airplane_seat->travel_class_id = $request->travel_class_id;
-        $airplane_seat->save();
-
-        // $airplane_seat = AirplaneSeat::where('seat_id', $seat_id)->where('airplane_id', $airplane_id)->updateOrInsert(
-        //     ['travel_class_id' => $request->travel_class_id]
-        // );
-        // $airplane_seat = AirplaneSeat::where('seat_id', $seat_id)->where('airplane_id', $airplane_id)->first();
-        // $airplane_seat->travel_class_id = $request->travel_class_id;
-        // dd($seat_id , $airplane_id ,$request->travel_class_id ,  $airplane_seat->travel_class_id);
-        // $airplane_seat->save();
-        // $airplane_seat::updateOrInsert(
-        //     ['travel_class_id' => $request->travel_class_id]
-        // );
-        // $airplane_seat->update(['travel_class_id' => $request->travel_class_id]);
-        return redirect()->back()->with('success', 'The modification was completed successfully.');
+        try{
+            $airplane_seat = AirplaneSeat::find($request->id);
+            $airplane_seat->update(['travel_class_id' => $request->travel_class_id]);
+            return response()->json(['state'=> true , 'message'=>'update class seat successfully'],200);
+        }
+        catch(\Exception $e){
+            return response()->json(['state'=> false , 'message'=> $e->getMessage()],500);
+        }
     }
 
     public function destroy($id)

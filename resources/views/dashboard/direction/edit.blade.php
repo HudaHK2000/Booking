@@ -20,32 +20,38 @@
                         </div>
                     @endif
                     <div class="form-row">
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-6 @error('origin_airport_code') input-was-validated @enderror">
                             <label for="inputFromAirport">From Airport:</label>
                             <select id="inputFromAirport" class="form-control" name="origin_airport_code">
                                 <option selected="">select airport:</option>
                                 @foreach ($airports as $airport )
-                                    <option value="{{$airport->airport_code}}"
-                                        @if ($airport->airport_code == $direction->origin_airport_code)
+                                    <option value="{{$airport->id}}"
+                                        @if ($airport->id == $direction->origin_airport_code)
                                             selected
                                         @endif
                                         >{{$airport->name}}</option>
                                 @endforeach
                             </select>
+                            @error('origin_airport_code')
+                                <div>{{ $errors->first('origin_airport_code') }}</div>
+                            @enderror
                         </div>
 
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-6 @error('destination_airport_code') input-was-validated @enderror">
                             <label for="inputToAirport">To Airport:</label>
                             <select id="inputToAirport" class="form-control" name="destination_airport_code">
                                 <option selected="">select airport:</option>
                                 @foreach ($airports as $airport )
-                                    <option value="{{$airport->airport_code}}"
-                                        @if ($airport->airport_code == $direction->destination_airport_code)
+                                    <option value="{{$airport->id}}"
+                                        @if ($airport->id == $direction->destination_airport_code)
                                             selected
                                         @endif
                                         >{{$airport->name}}</option>
                                 @endforeach
                             </select>
+                            @error('destination_airport_code')
+                                <div>{{ $errors->first('destination_airport_code') }}</div>
+                            @enderror
                         </div>
                     </div>
                     <button type="submit" class="btn  btn-primary">Edit</button>

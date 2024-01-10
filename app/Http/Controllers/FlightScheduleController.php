@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\FlightSchedule;
 use App\Models\Direction;
+use App\Models\Airline;
+use App\Models\Airplane;
+use App\Models\FlightStatu;
 use Illuminate\Http\Request;
 
 class FlightScheduleController extends Controller
@@ -28,7 +31,14 @@ class FlightScheduleController extends Controller
     public function create()
     {
         $directions = Direction::all();
-        return view('dashboard.flightSchedule.create',compact('directions'));
+        $airlines = Airline::all();
+        $airplanes = Airplane::all();
+        return view('dashboard.flightSchedule.create',compact(['directions','airlines','airplanes']));
+    }
+    public function getAirplanesByAirline($airlineId){
+        $airplanes = Airplane::where('airline_id', $airlineId)->get();
+        // dd($airplanes);
+        return response()->json($airplanes);
     }
 
     /**
@@ -41,12 +51,14 @@ class FlightScheduleController extends Controller
     {
         $direction = Direction::find($request->airports);
         $flightSchedule = new FlightSchedule();
-        $flightSchedule->origin_airport_code = $direction->origin_airport_code ;
-        $flightSchedule->destination_airport_code = $direction->destination_airport_code ;
+        $flightSchedule->direction_id = $direction->id ;
+        $flightSchedule->airplane_id = $request->airplane ;
         $flightSchedule->departure_time = $request->departure_time ;
         $flightSchedule->arrival_time = $request->arrival_time ;
+        $flight_status = FlightStatu::where('name','Waiting')->first();
+        $flightSchedule->flight_status_id = $flight_status->id ;
         $flightSchedule->save();
-        return redirect()->back()->with('success','The addition process was completed successfully.');
+        return redirect()->back()->with('success','The addition flight to the schedule was completed successfully.');
     }
 
     /**
@@ -70,7 +82,9 @@ class FlightScheduleController extends Controller
     {
         $flightSchedule = FlightSchedule::find($id);
         $directions = Direction::all();
-        return view('dashboard.flightSchedule.edit',compact(['flightSchedule','directions']));
+        $airlines = Airline::all();
+        $airplanes = Airplane::all();
+        return view('dashboard.flightSchedule.edit',compact(['flightSchedule','directions','airlines','airplanes']));
     }
 
     /**

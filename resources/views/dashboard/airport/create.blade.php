@@ -53,7 +53,7 @@
                         <div class="form-group col-md-6">
                             <label for="inputCity">City</label>
                             <select id="inputCity" class="form-control" name="city_id">
-                                <option selected="">select City</option>
+                                <option selected="" value="">select City</option>
                                 @foreach ($cities as $key=>$city )
                                     <option @if(old('city_id')== $city->id) selected @endif value="{{$city->id}}">{{$city->name}}</option>
                                 @endforeach
@@ -102,5 +102,4 @@
         });
     });
 </script>
-
 @endsection

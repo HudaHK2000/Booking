@@ -22,6 +22,9 @@
                                 <th>#</th>
                                 <th>From Airpot</th>
                                 <th>To Airport</th>
+                                <th>Airline</th>
+                                <th>Airplane</th>
+                                <th>Status</th>
                                 <th>Departure Date/Time</th>
                                 <th>Arrival Date/time</th>
                                 <th>Edit</th>
@@ -34,8 +37,11 @@
                                 <td class="center">
                                     {{ $key+1 }}
                                 </td>
-                                <td style="text-transform: capitalize;">{{ $flightSchedule->origin_airports->origin_airport->name }}</td>
-                                <td style="text-transform: capitalize;">{{ $flightSchedule->destination_airports->destination_airport->name }}</td>
+                                <td style="text-transform: capitalize;">{{ $flightSchedule->direction->originAirport->name }}</td>
+                                <td style="text-transform: capitalize;">{{ $flightSchedule->direction->destinationAirport->name }}</td>
+                                <td>{{ $flightSchedule->airplaneFlight->airline->name }}</td>
+                                <td>{{ $flightSchedule->airplaneFlight->model }}</td>
+                                <td>{{ $flightSchedule->flightStatu->name }}</td>
                                 <td>{{ $flightSchedule->departure_time }}</td>
                                 <td>{{ $flightSchedule->arrival_time }}</td>
                                 <td>

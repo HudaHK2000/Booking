@@ -19,24 +19,30 @@
                         </div>
                     @endif
                     <div class="form-row">
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-6 @error('origin_airport_code') input-was-validated @enderror">
                             <label for="inputFromAirport">From Airport:</label>
                             <select id="inputFromAirport" class="form-control" name="origin_airport_code">
-                                <option selected="">select airport:</option>
+                                <option selected="" value="">select airport:</option>
                                 @foreach ($airports as $airport )
-                                    <option value="{{$airport->airport_code}}">{{$airport->name}}</option>
+                                    <option @if(old('origin_airport_code')== $airport->id) selected @endif value="{{$airport->id}}">{{$airport->name}}</option>
                                 @endforeach
                             </select>
+                            @error('origin_airport_code')
+                                <div>{{ $errors->first('origin_airport_code') }}</div>
+                            @enderror
                         </div>
 
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-6 @error('destination_airport_code') input-was-validated @enderror">
                             <label for="inputToAirport">To Airport:</label>
                             <select id="inputToAirport" class="form-control" name="destination_airport_code">
-                                <option selected="">select airport:</option>
+                                <option selected="" value="">select airport:</option>
                                 @foreach ($airports as $airport )
-                                    <option value="{{$airport->airport_code}}">{{$airport->name}}</option>
+                                    <option @if(old('destination_airport_code')== $airport->id) selected @endif value="{{$airport->id}}">{{$airport->name}}</option>
                                 @endforeach
                             </select>
+                            @error('destination_airport_code')
+                                <div>{{ $errors->first('destination_airport_code') }}</div>
+                            @enderror
                         </div>
                     </div>
                     <button type="submit" class="btn  btn-primary">Add</button>

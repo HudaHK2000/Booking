@@ -30186,3 +30186,11 @@ new-task label input[type=checkbox] {
 .table td > div {
     margin: auto;
 }
+.input-was-validated select {
+    border-color: #e74c3c;
+    color: #e74c3c;
+}
+.input-was-validated select:focus {
+    border-color: #e74c3c;
+    color: #e74c3c;
+}

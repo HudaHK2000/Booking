@@ -44,9 +44,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('airline', AirlineController::class);
     Route::resource('airplane', AirplaneController::class);
     Route::post('/airplaneSeat/{id}', [AirplaneController::class,'updateAirplaneSeat']);
-
+    
     Route::resource('direction', DirectionController::class);
     Route::resource('flightSchedule', FlightScheduleController::class);
+    Route::get('/getAirplanesByAirline/{airlineId}', [FlightScheduleController::class,'getAirplanesByAirline']);
 
 });
 

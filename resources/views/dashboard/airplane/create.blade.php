@@ -21,10 +21,10 @@
                     <div class="form-row">
                         <div class="form-group col-md-6 @error('airline_id') input-was-validated @enderror">
                             <label for="inputAirline">Airline</label>
-                            <select id="inputAirline" class="form-control" name="airline_id" value="{{ old('airline_id') }}">
-                                <option selected="">select Airline</option>
+                            <select id="inputAirline" class="form-control" name="airline_id">
+                                <option selected="" value="">select Airline</option>
                                 @foreach ($airlines as $airline )
-                                    <option value="{{$airline->id}}">{{$airline->name}}</option>
+                                    <option @if(old('airline_id')== $airline->id) selected @endif value="{{$airline->id}}">{{$airline->name}}</option>
                                 @endforeach
                             </select>
                             @error('airline_id')

@@ -32,8 +32,8 @@
                                 <td class="center">
                                     {{ $key+1 }}
                                 </td>
-                                <td style="text-transform: capitalize;">{{ $direction->origin_airport->name }}</td>
-                                <td style="text-transform: capitalize;">{{ $direction->destination_airport->name }}</td>
+                                <td style="text-transform: capitalize;">{{ $direction->originAirport->name }}</td>
+                                <td style="text-transform: capitalize;">{{ $direction->destinationAirport->name }}</td>
                                 <td>
                                     <a href='{{ url("direction/$direction->id/edit") }}' class="btn btn-outline-primary">
                                         Edit
