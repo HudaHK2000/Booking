@@ -66,19 +66,24 @@ class FlightScheduleController extends Controller
             'arrival_time' => [
                 'required',
                 'different:departure_time',
+                // يجب ان يكون وقت الوصول اكبر/بعد الوقت الحالي و تاريخ ووقت المغادرة او الاقلاع
                 function ($attribute, $value, $fail) use ($request) {
+                    //  فحص ما إذا كان وقت الوصول اصغر من الوقت الحالي فيعطي رسالة خطأ
                     if (strtotime($value) <= time()) {
                         $fail('The '.$attribute.' must be a date and time after the current date and time.');
                     }
+                    //  فحص ما إذا كان وقت الوصول اصغر من وقت المغادرة فيعطي رسالة خطأ
                     if (strtotime($value) <= strtotime($request->input('departure_time'))) {
                         $fail('The '.$attribute.' must be a date and time after the departure time.');
                     }
                     // Custom validation to check for duplicate airplane flights
                     $airplane = $request->input('airplane');
+                    // فحص ما اذا كان هناك موعد اخر لذات الطائرة يحمل ذات القيمة و فحص ما اذا كان هناك وقت اخر بين وقتي المغادرة والوصول
                     $duplicateFlights = FlightSchedule::where('airplane_id', $airplane)
                     ->where(function ($query) use ($value, $request) {
 
                         $query->where(function ($query) use ($value, $request) {
+
                             $query->where('departure_time', '<', $value)
                                 ->where('arrival_time', '>', $request->input('departure_time'));
                         })
@@ -91,7 +96,8 @@ class FlightScheduleController extends Controller
                         $fail('There is a duplicate flight for the same airplane within the specified departure and arrival times.');
                     }
                 },]
-            ],[])->validate();
+        ]
+            ,[])->validate();
             // dd($request->airplane);
         $direction = Direction::find($request->airports);
         $flightSchedule = new FlightSchedule();
@@ -139,10 +145,57 @@ class FlightScheduleController extends Controller
      * @param  \App\Models\FlightSchedule  $flightSchedule
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,$id)
+    public function update(Request $request,FlightSchedule $flightSchedule)
     {
+        // $flightSchedule = FlightSchedule::find($id);
+
+        $validator = Validator::make($request->all(), [
+            'airports' => ['required'],
+            'airline' => ['required'],
+            'airplane' => ['required'],
+            'departure_time' => [
+                'required',
+                function ($attribute, $value, $fail) use ($request){
+                    if (strtotime($value) <= time()) {
+                        $fail('The '.$attribute.' must be a date and time after the current date and time.');
+                    }
+                },
+            ],
+            'arrival_time' => [
+                'required',
+                'different:departure_time',
+                // يجب ان يكون وقت الوصول اكبر/بعد الوقت الحالي و تاريخ ووقت المغادرة او الاقلاع
+                function ($attribute, $value, $fail) use ($request) {
+                    //  فحص ما إذا كان وقت الوصول اصغر من الوقت الحالي فيعطي رسالة خطأ
+                    if (strtotime($value) <= time()) {
+                        $fail('The '.$attribute.' must be a date and time after the current date and time.');
+                    }
+                    //  فحص ما إذا كان وقت الوصول اصغر من وقت المغادرة فيعطي رسالة خطأ
+                    if (strtotime($value) <= strtotime($request->input('departure_time'))) {
+                        $fail('The '.$attribute.' must be a date and time after the departure time.');
+                    }
+                    // Custom validation to check for duplicate airplane flights
+                    $airplane = $request->input('airplane');
+                    // فحص ما اذا كان هناك موعد اخر لذات الطائرة يحمل ذات القيمة و فحص ما اذا كان هناك وقت اخر بين وقتي المغادرة والوصول
+                    $duplicateFlights = FlightSchedule::where('airplane_id', $airplane)->where('id','<>',$request->id)
+                    ->where(function ($query) use ($value, $request) {
+                        $query->where(function ($query) use ($value, $request) {
+                            $query->where('departure_time', '<', $value)
+                                ->where('arrival_time', '>', $request->input('departure_time'));
+                        })
+                        ->orWhere(function ($query) use ($value, $request) {
+                            $query->where('departure_time', '<', $request->input('arrival_time'))
+                                ->where('arrival_time', '>', $value);
+                        });
+                    })->count();
+                    if ($duplicateFlights > 0) {
+                        $fail('There is a duplicate flight for the same airplane within the specified departure and arrival times.');
+                    }
+                },]
+        ]
+            ,[])->validate();
+        
         $direction = Direction::find($request->airports);
-        $flightSchedule = FlightSchedule::find($id);
         $flightSchedule->direction_id = $direction->id ;
         $flightSchedule->airplane_id = $request->airplane ;
         $flightSchedule->departure_time = $request->departure_time ;

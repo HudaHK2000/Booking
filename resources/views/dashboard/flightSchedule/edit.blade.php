@@ -77,6 +77,8 @@
                                 <div>{{ $errors->first('arrival_time') }}</div>
                             @enderror 
                         </div>
+                
+                        <input type="hidden" name="id" value="{{ $flightSchedule->id }}">
                     </div>
                     <button type="submit" class="btn  btn-primary">Edit</button>
                 </form>
