@@ -48,7 +48,9 @@
                             <select id="inputAirplane" class="form-control" name="airplane">
                                 <option selected="" value="">select Airplane:</option>
                                 @foreach ($airplanes as $key=>$airplane )
-                                    <option @if(old('airplane')== $airplane->id) selected @endif value="{{$airplane->id}}">{{$airplane->name}}</option>
+                                    <option 
+                                    @if(old('airplane')== $airplane->id)selected @endif
+                                    value="{{$airplane->id}}" > {{$airplane->model}} </option>
                                 @endforeach
                             </select>   
                             @error('airplane')
@@ -63,7 +65,7 @@
                             @enderror 
                         </div>
                         <div class="form-group col-md-6  @error('arrival_time') input-was-validated @enderror">
-                            <label for="inputArrivalTime">Arrival Date Time"</label>
+                            <label for="inputArrivalTime">Arrival Date Time:</label>
                             <input type="datetime-local" name="arrival_time" value="{{ old('arrival_time') }}" class="form-control" id="inputArrivalTime" placeholder="Arrival Date Time">
                             @error('arrival_time')
                                 <div>{{ $errors->first('arrival_time') }}</div>
@@ -94,6 +96,7 @@
                             $('#inputAirplane').empty();
                             $.each(data, function(key, value){
                             $('#inputAirplane').append('<option value="'+value.id+'">'+value.model+'</option>');
+                            console.log(value);
                         });
                         }
                         else{
@@ -104,10 +107,8 @@
                 });
             } else {
                 $('#inputAirplane').empty();
-                $('#inputAirplane').append('<option selected="">No Airplane For this Airline</option>');
             }
         });
     });
 </script>
-
 @endsection

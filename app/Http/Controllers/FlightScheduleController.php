@@ -39,8 +39,7 @@ class FlightScheduleController extends Controller
         return view('dashboard.flightSchedule.create',compact(['directions','airlines','airplanes']));
     }
     public function getAirplanesByAirline($airlineId){
-        $airplanes = Airplane::where('airline_id', $airlineId)->get();
-        // dd($airplanes);
+        $airplanes = Airplane::where('airline_id', $airlineId)->get();  
         return response()->json($airplanes);
     }
 
@@ -53,27 +52,47 @@ class FlightScheduleController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            // 'origin_airport_code' => [
-            //     'required',
-            //     Rule::unique('directions', 'origin_airport_code')->where(function ($query) use ($request) {
-            //         return $query->where('destination_airport_code', $request->input('destination_airport_code'));
-            //     })
-            // ],
-            // 'destination_airport_code' => [
-            //     'required',
-            //     'different:origin_airport_code',
-            //     Rule::unique('directions', 'destination_airport_code')->where(function ($query) use ($request) {
-            //         return $query->where('origin_airport_code', $request->input('origin_airport_code'));
-            //     })]
-            ],[
-            // 'origin_airport_code.required'=> 'Please enter the departure airport',
-            // 'destination_airport_code.required' => 'Please enter the arrival airport',
-            // 'origin_airport_code.exists'=> 'Please select the airport name from the list. The airport you chose does not exist in the database',
-            // 'destination_airport_code.exists' => 'Please select the airport name from the list. The airport you chose does not exist in the database',
-            // 'destination_airport_code.different' => 'Please select a different arrival airport than the departure airport',
-            // 'origin_airport_code.unique'=> 'This origin to destination airport combination already exists',
-            // 'destination_airport_code.unique'=> 'This destination from arrival airport combination already exists',
-        ])->validate();
+            'airports' => ['required'],
+            'airline' => ['required'],
+            'airplane' => ['required'],
+            'departure_time' => [
+                'required',
+                function ($attribute, $value, $fail) use ($request){
+                    if (strtotime($value) <= time()) {
+                        $fail('The '.$attribute.' must be a date and time after the current date and time.');
+                    }
+                },
+            ],
+            'arrival_time' => [
+                'required',
+                'different:departure_time',
+                function ($attribute, $value, $fail) use ($request) {
+                    if (strtotime($value) <= time()) {
+                        $fail('The '.$attribute.' must be a date and time after the current date and time.');
+                    }
+                    if (strtotime($value) <= strtotime($request->input('departure_time'))) {
+                        $fail('The '.$attribute.' must be a date and time after the departure time.');
+                    }
+                    // Custom validation to check for duplicate airplane flights
+                    $airplane = $request->input('airplane');
+                    $duplicateFlights = FlightSchedule::where('airplane_id', $airplane)
+                    ->where(function ($query) use ($value, $request) {
+
+                        $query->where(function ($query) use ($value, $request) {
+                            $query->where('departure_time', '<', $value)
+                                ->where('arrival_time', '>', $request->input('departure_time'));
+                        })
+                        ->orWhere(function ($query) use ($value, $request) {
+                            $query->where('departure_time', '<', $request->input('arrival_time'))
+                                ->where('arrival_time', '>', $value);
+                        });
+                    })->count();
+                    if ($duplicateFlights > 0) {
+                        $fail('There is a duplicate flight for the same airplane within the specified departure and arrival times.');
+                    }
+                },]
+            ],[])->validate();
+            // dd($request->airplane);
         $direction = Direction::find($request->airports);
         $flightSchedule = new FlightSchedule();
         $flightSchedule->direction_id = $direction->id ;
