@@ -17,9 +17,9 @@ class TravelClassSeeder extends Seeder
         $travelClasses = [
             ['name' => 'First Class', 'description' => 'This class provides a luxurious experience with luxurious, convertible seats, high-level personal service, and a luxurious food menu.' , 'image' => 'FirstClass.jpg'],
             ['name' => 'Business Class', 'description' => 'This class offers comfortable, convertible seats, high-level service with a varied food menu, and a private workspace.' , 'image' => 'BusinessClass.jpg'],
-            ['name' => 'Premium Economy Class', 'description' => 'This class offers comfortable seats with more legroom and better food and entertainment service than regular Economy Class.' , 'image' => ''],
+            ['name' => 'Premium Economy Class', 'description' => 'This class offers comfortable seats with more legroom and better food and entertainment service than regular Economy Class.' , 'image' => 'PremiumEconomyClass.jpg'],
             ['name' => 'Economy Class', 'description' => 'This is the most economical class and offers simple seats with limited legroom and basic food service.' , 'image' => 'EconomyClass.jpg'],
-            ['name' => 'Disabled', 'description' => ''],
+            ['name' => 'Disabled', 'description' => ' ' , 'image' => ' '],
         ];
 
         foreach ($travelClasses as $class) {

@@ -14,17 +14,11 @@ return new class extends Migration
     public function up()
     {
         Schema::create('bookings', function (Blueprint $table) {
+            $table->id();
             $table->bigInteger('Passenger_id')->unsigned();
             $table->bigInteger('flight_seat_prices_id')->unsigned();
-            // $table->bigInteger('flight_id')->unsigned();
-            // $table->bigInteger('airplane_id')->unsigned();
-            // $table->string('seat_id');
             $table->foreign('Passenger_id')->references('id')->on('passengers')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('flight_seat_prices_id')->references('id')->on('flight_seat_prices')->onDelete('cascade')->onUpdate('cascade');
-            // $table->foreign('flight_id')->references('flight_id')->on('flight_seat_prices')->onDelete('cascade')->onUpdate('cascade');
-            // $table->foreign('airplane_id')->references('airplane_id')->on('flight_seat_prices')->onDelete('cascade')->onUpdate('cascade');
-            // $table->foreign('seat_id')->references('seat_id')->on('flight_seat_prices')->onDelete('cascade')->onUpdate('cascade');
-            // $table->primary(['Passenger_id','flight_id','seat_id', 'airplane_id']);
             $table->timestamps();
         });
     }

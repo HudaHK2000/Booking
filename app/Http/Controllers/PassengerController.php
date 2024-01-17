@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Passenger;
 use App\Models\Country;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Traits\ImageTrait;
@@ -27,8 +28,6 @@ class PassengerController extends Controller
     {
         $countries = Country::all();
         return view('frontend.passenger',compact('countries'));
-        // $countries = Country::all();
-        // return view('dashboard.passenger.create',compact('countries'));
     }
 
     /**
@@ -41,14 +40,14 @@ class PassengerController extends Controller
     {
         // dd(\Auth::user()->id,$request);
         $validator = Validator::make($request->all(),[
-            // 'first_name' => ['required'],
-            // 'last_name' => ['required'],
-            // 'phone' => ['required','numeric'],
-            // 'birthday' => ['required'],
-            // 'gender' => ['required'],
-            // 'passport' => ['required'],
-            // 'country_id' => ['required'],
-            'user_id' => ['required', 'unique:passengers'],
+            'first_name' => ['required'],
+            'last_name' => ['required'],
+            'phone' => ['required','numeric'],
+            'birthday' => ['required'],
+            'gender' => ['required'],
+            'passport' => ['required'],
+            'country_id' => ['required'],
+            'user_id' => [ 'unique:passengers'],
         ],[
         ])->validate();
         
@@ -63,7 +62,9 @@ class PassengerController extends Controller
         $passenger->country_id = $request->country_id ;
         $passenger->user_id = \Auth::user()->id ;
         $passenger->save();
-        return redirect()->back()->with('success','The addition process was completed successfully.');
+        // return view('frontend.index');
+        return redirect()->back()->with('Message', 'You have successfully registered as a traveler. Now you can book flights');
+
     }
 
     /**
@@ -107,18 +108,19 @@ class PassengerController extends Controller
         $passenger->birthday = $request->birthday ;
         $passenger->gender = $request->gender ;
         $passenger->country_id = $request->country_id ;
-        if (!empty ($request->file('image'))) {
+        if (!empty ($request->file('passport'))) {
             if(\File::exists(public_path('assets/images/passenger/').$passenger->passport)){
                 \File::delete(public_path('assets/images/passenger/').$passenger->passport);
             }
-            $imageName = uniqid() . $request->file('image')->getClientOriginalName();
+            $imageName = uniqid() . $request->file('passport')->getClientOriginalName();
 
-            $request->file('image')->move(public_path('assets/images/passenger'), $imageName);
+            $request->file('passport')->move(public_path('assets/images/passenger'), $imageName);
             $passenger->passport= $imageName;
         }
         $passenger->user_id = \Auth::user()->id ;
         $passenger->save();
-        return redirect()->back();
+        return redirect()->back()->with('Message', 'Your data has been successfully modified');
+
     }
 
     /**
@@ -134,5 +136,29 @@ class PassengerController extends Controller
         }
         $passenger->delete();
         return redirect()->back()->with('success','The deletion was completed successfully.');
+    }
+    public function usersIndex()
+    {
+        $users=User::all();
+        return view('dashboard.user.index',compact('users'));
+    }
+
+    public function toggleAdminStatus($id)
+    {
+        $user = User::find($id);
+        $user->is_admin = !$user->is_admin; 
+        $user->save();
+
+        return response()->json($user->is_admin ? 1 : 0);
+    }
+    public function usersDestroy($id)
+    {
+        $user = User::find($id);
+        if ($user) {
+            $user->delete();
+            return redirect()->back()->with('success', 'The deletion was completed successfully');
+        } else {
+            return redirect()->back()->with('error', 'User not found');
+        }
     }
 }

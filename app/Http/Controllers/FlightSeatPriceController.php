@@ -47,28 +47,57 @@ class FlightSeatPriceController extends Controller
             'economy_class' => ['required'],
         ]
             ,[])->validate();
+            // $flightSchedule = FlightSchedule::find($request->flight_id);
+            // $number_of_seats = $flightSchedule->airplaneFlight->number_of_seats;
+            // if(isset($number_of_seats)){
+            //     for( $i = 1 ; $i <= $number_of_seats ; $i++){
+            //         $flight_seat_price = new FlightSeatPrice();
+            //         $flight_seat_price->flight_id = $flightSchedule->id;
+
+            //         $seat_id = $flightSchedule->whereHas('airplaneFlight', function($query) use ($request) {
+            //                 $query->whereHas('airplaneSeats', function($query) use ($request) {
+            //                         $query->where('seat_id', $i)->first();
+            //                     });
+            //             });
+            //         $flight_seat_price->airplane_seat_id = $seat_id->id;
+            //         if($seat_id->travel_class_id  == 1 ){
+            //             $flight_seat_price->price = $request->economy_class;
+            //         }elseif($seat_id->travel_class_id == 2 ){
+            //             $flight_seat_price->price = $request->premium_economy_class;
+            //         }elseif($seat_id->travel_class_id == 3 ){
+            //             $flight_seat_price->price = $request->first_class;
+            //         }elseif($seat_id->travel_class_id == 4 ){
+            //             $flight_seat_price->price = $request->business_class;
+            //         }else{
+            //             $flight_seat_price->price = 0;
+            //         }
+            //         $flight_seat_price->save();
+            //     }
+            // }
             $flightSchedule = FlightSchedule::find($request->flight_id);
-            $number_of_seats = $flightSchedule->airplaneFlight->number_of_seats;
-            if(isset($number_of_seats)){
-                for( $i = 1 ; $i <= $number_of_seats ; $i++){
-                    $flight_seat_price = new FlightSeatPrice();
-                    $flight_seat_price->flight_id = $flightSchedule->id;
-                    $flight_seat_price->airplane_seat_id = $i;
-                    $seat_id = $flightSchedule->airplaneFlight->airplaneSeats()->where('seat_id', $i)->first();
-                    if($seat_id->travel_class_id  == 1 ){
-                        $flight_seat_price->price = $request->economy_class;
-                    }elseif($seat_id->travel_class_id == 2 ){
-                        $flight_seat_price->price = $request->premium_economy_class;
-                    }elseif($seat_id->travel_class_id == 3 ){
-                        $flight_seat_price->price = $request->first_class;
-                    }elseif($seat_id->travel_class_id == 4 ){
-                        $flight_seat_price->price = $request->business_class;
-                    }else{
-                        $flight_seat_price->price = 0;
-                    }
-                    $flight_seat_price->save();
+            $airplaneFlight = $flightSchedule->airplaneFlight;
+            $seats = $airplaneFlight->airplaneSeats;
+
+            foreach ($seats as $seat) {
+                $flight_seat_price = new FlightSeatPrice();
+                $flight_seat_price->flight_id = $flightSchedule->id;
+                $flight_seat_price->airplane_seat_id = $seat->id;
+
+                if ($seat->travel_class_id == 1) {
+                    $flight_seat_price->price = $request->first_class;
+                } elseif ($seat->travel_class_id == 2) {
+                    $flight_seat_price->price = $request->business_class;
+                } elseif ($seat->travel_class_id == 3) {
+                    $flight_seat_price->price = $request->premium_economy_class;
+                } elseif ($seat->travel_class_id == 4) {
+                    $flight_seat_price->price = $request->economy_class;
+                } else {
+                    $flight_seat_price->price = 0;
                 }
+
+                $flight_seat_price->save();
             }
+
         return redirect()->back()->with('success','The addition flight to the schedule was completed successfully.');
     
     }

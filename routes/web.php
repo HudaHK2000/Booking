@@ -12,6 +12,8 @@ use App\Http\Controllers\DirectionController;
 use App\Http\Controllers\FlightScheduleController;
 use App\Http\Controllers\FlightSeatPriceController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\HomeController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -27,17 +29,17 @@ use App\Http\Controllers\BookingController;
 //     return view('index');
 // });
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::group(['middleware' => ['auth']],function(){
-    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-    Route::post('/getallFlight', [App\Http\Controllers\HomeController::class, 'getAllFlight']);
-    Route::resource('passenger', PassengerController::class);
-
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::post('/getallFlight', [HomeController::class, 'getAllFlight']);
+    Route::resource('passenger', PassengerController::class );
+    Route::get('/flightDetails/{id}', [HomeController::class, 'flightDetails']);
 
 });
 Route::group(['middleware' => ['passenger']],function(){
-        Route::get('booking',[BookingController::class,'create']);
-        Route::get('profile',[PassengerController::class,'profile']);
+    Route::post('booking',[BookingController::class,'store']);
+    Route::get('profile',[PassengerController::class,'profile']);
 });
 
 Route::middleware(['auth', 'admin'])->group(function () {
@@ -60,8 +62,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // Route::resource('flightSeatPrice', FlightSeatPriceController::class);
     Route::get('/flightSeatPrice/{flightSchedule_id}', [FlightSeatPriceController::class,'create']);
     Route::post('/flightSeatPrice', [FlightSeatPriceController::class,'store']);
-
-
+    Route::get('booking', [BookingController::class,'index']);
+    Route::get('user', [PassengerController::class,'usersIndex']);  
+    Route::put('user-admin/{id}', [PassengerController::class, 'toggleAdminStatus']);
+    Route::delete('user-destroy/{id}', [PassengerController::class, 'usersDestroy']);
 });
 
 Auth::routes();

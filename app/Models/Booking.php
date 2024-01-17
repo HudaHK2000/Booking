@@ -8,6 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Booking extends Model
 {
     use HasFactory;
-    protected $PrimaryKey=['passenger_id','flight_id','airplane_id','seat_id'];
-    protected $fillable=['passenger_id','flight_id','airplane_id','seat_id'];
+    // protected $PrimaryKey=['passenger_id','flight_seat_prices_id'];
+    protected $fillable=['Passenger_id','flight_seat_prices_id'];
+    public function passenger(){
+        return $this->belongsTo('App\Models\Passenger','Passenger_id','id');
+    }
+    public function flightSeat(){
+        return $this->belongsTo('App\Models\FlightSeatPrice','flight_seat_prices_id','id');
+    }
 }

@@ -224,7 +224,7 @@ html,body{
     -o-transition: all 0.25s ease-in-out 0s;
     transition: all 0.25s ease-in-out 0s;
 }
-.main-menu  .nav  li.active a,
+.main-menu  .nav  li.active > a,
 .main-menu  .nav  li a:hover,
 .main-menu .nav  li a:focus{
     color: #00d8ff;
@@ -245,8 +245,8 @@ html,body{
     transition: .3s ease-in-out;
     
 }
-.main-menu .nav li.active  a:before,
-.main-menu .nav a:hover:before{
+.main-menu .nav li.active > a:before,
+.main-menu .nav > a:hover:before{
     background: #00d8ff;
     width: 100%;
 }
@@ -894,6 +894,7 @@ html,body{
 }
 .single-package-item img {
     width: 100%;
+    height: 300px;
 }
 .single-package-item h3{
     position: relative;
@@ -1217,6 +1218,7 @@ html,body{
 .blog-content .thumbnail .thumbnail-img  img{
     max-width: 102%;
     margin-left: -4px;
+    height: 150px;
 }
 .thumbnail-img-overlay{
     position:absolute;

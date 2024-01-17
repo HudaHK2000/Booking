@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('flight_id');
             $table->unsignedBigInteger('airplane_seat_id');
-            // $table->string('seat_id');
+            $table->boolean('book')->default(0);
             $table->double('price');
             $table->foreign('flight_id')->references('id')->on('flight_schedules')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('airplane_seat_id')->references('id')->on('airplane_seats')->onDelete('cascade')->onUpdate('cascade');

@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Models\Country;
+use App\Models\TravelClass;
+use App\Models\FlightSeatPrice;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class BookingController extends Controller
 {
@@ -14,9 +18,9 @@ class BookingController extends Controller
      */
     public function index()
     {
-        //
+        $bookings = Booking::with(['passenger'])->get();
+        return view('dashboard.booking.index',compact('bookings'));
     }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -35,7 +39,44 @@ class BookingController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(),[
+            'class' => ['required'],
+        ],[
+        ])->validate();
+        
+        $number_of_seats_required = $request->childs+$request->adults ;
+        $available_seats = FlightSeatPrice::where('flight_id', $request->flight_id)
+        ->where('book', 0)
+        ->whereHas('seat', function($query) use ($request) {
+            $query->where('travel_class_id', $request->class);
+        })->get();
+        $number_of_seats_available  = $available_seats->count() ;
+        if($number_of_seats_available >= $number_of_seats_required ){
+            for( $i=0 ; $i < $number_of_seats_required ; $i++ ){
+                $book = new Booking();
+                $passenger_id = \Auth::user()->passenger->id;
+                $book->Passenger_id = $passenger_id ;
+                
+                // استخدام first() بدلاً من get() للحصول على سجل واحد فقط
+                $available_seat = FlightSeatPrice::where('flight_id', $request->flight_id)
+                    ->where('book', 0)
+                    ->whereHas('seat', function($query) use ($request) {
+                        $query->where('travel_class_id', $request->class);
+                    })->first();
+        
+                // التأكد من أن تم العثور على مقعد قبل تغيير قيمة الحقل "book"
+                if($available_seat){
+                    $book->flight_seat_prices_id = $available_seat->id ;
+                    $available_seat->book = 1 ;
+                    $available_seat->save(); // حفظ التغييرات
+                    $book->save();
+                }
+            }
+            return redirect()->back()->with('Message', 'Your reservation has been completed successfully');
+        }else{
+            return redirect()->back()->with('Message', 'There are not enough seats on the plane');
+        }
+        
     }
 
     /**

@@ -11,4 +11,16 @@ class Country extends Model
     // protected $PrimaryKey='country_code';
     // public $incrementing = false;
     protected $fillable=['country_code','name'];
+    public static function boot(){
+        parent::boot();
+        static::saving(function(){
+            \Cache::flush();
+        });
+        static::updating(function(){
+            \Cache::flush();
+        });
+        static::deleting(function(){
+            \Cache::flush();
+        });
+    }
 }

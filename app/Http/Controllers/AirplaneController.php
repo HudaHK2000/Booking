@@ -6,6 +6,7 @@ use App\Models\Airplane;
 use App\Models\AirplaneSeat;
 use App\Models\Airline;
 use App\Models\TravelClass;
+use App\Models\FlightSeatPrice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -115,6 +116,7 @@ class AirplaneController extends Controller
         try{
             $airplane_seat = AirplaneSeat::find($request->id);
             $airplane_seat->update(['travel_class_id' => $request->travel_class_id]);
+            // if(!empty(FlightSeatPrice:where(,$airplane_seat)->g))
             return response()->json(['state'=> true , 'message'=>'update class seat successfully'],200);
         }
         catch(\Exception $e){

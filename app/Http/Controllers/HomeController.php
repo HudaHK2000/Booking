@@ -40,6 +40,12 @@ class HomeController extends Controller
 
         return $timeDiff;
     }
+    public function flightDetails($id)
+    {
+        $flightSchedule = FlightSchedule::find($id);
+        $classes = TravelClass::all();
+        return view('frontend.booking',compact(['flightSchedule','classes']));
+    }
     public function getAllFlight(Request $request) {
         $flights = FlightSchedule::with('airplaneFlight.airplaneSeats');
     
@@ -54,10 +60,12 @@ class HomeController extends Controller
             });
         }
         if($request->departure){
-            $flights = $flights->where('departure_time', '=', $request->departure);
+            $flights = $flights->where('departure_time', '>=', $request->departure.' 00:00:00');
+            $flights = $flights->where('departure_time', '<=', $request->departure.' 23:59:59');
         }
         if($request->return){
-            $flights = $flights->where('arrival_time', '=', $request->return);
+            $flights = $flights->where('arrival_time', '>=', $request->return.' 00:00:00');
+            $flights = $flights->where('arrival_time', '<=', $request->return.' 23:59:59');
         }
         if($request->adults + $request->childs){
             $flights = $flights->whereHas('airplaneFlight', function($query) use ($request) {
@@ -71,9 +79,59 @@ class HomeController extends Controller
         }
     
         $flights = $flights->where('departure_time', '>', now()->toDateTimeString())->get();
-        $flightSchedules=$flights;
+        $flightSchedules = $flights;
         
-        return view('frontend.flights',compact('flightSchedules'));
+        if ($flightSchedules->isEmpty()) {
+            return redirect()->back()->with('Message', 'There are no flights compatible with the requests entered. Please choose another flight');
+        } else {
+            return view('frontend.flights', compact('flightSchedules'));
+        }
+    
     }
+    // public function getAllFlight(Request $request) {
+    //     // $c = 0;
+    //     $flights = FlightSchedule::with('airplaneFlight.airplaneSeats');
+    //     if($request->from){
+    //         $flights = $flights->whereHas('direction.originAirport.city.country', function($query) use ($request) {
+    //             $query->where('id', $request->from);
+    //         // $c = $c+1;
+    //         });
+    //     }
+    //     if($request->to){
+    //         $flights = $flights->whereHas('direction.destinationAirport.city.country', function($query) use ($request) {
+    //             $query->where('id', $request->to);
+    //             // $c = $c+1;
+    //         });
+    //     }
+    //     if($request->departure){
+    //         $flights = $flights->where('departure_time', '=', $request->departure);
+    //         // $c = $c+1;
+    //     }
+    //     if($request->return){
+    //         $flights = $flights->where('arrival_time', '=', $request->return);
+    //         // $c = $c+1;
+    //     }
+    //     if($request->adults + $request->childs){
+    //         $flights = $flights->whereHas('airplaneFlight', function($query) use ($request) {
+    //             $query->where('number_of_seats', '>=', $request->adults + $request->childs);
+    //             // $c = $c+1;
+    //         });
+    //     }
+    //     if($request->class){
+    //         $flights = $flights->whereHas('airplaneFlight.airplaneSeats', function($query) use ($request) {
+    //             $query->where('travel_class_id', $request->class);
+    //             // $c = $c+1;
+    //         });
+    //     }
+    
+    //     $flights = $flights->where('departure_time', '>', now()->toDateTimeString())->get();
+    //     $flightSchedules=$flights;
+    //     // if( $c > 0 ){
+    //         return view('frontend.flights',compact('flightSchedules'));
+    //     // }
+    //     // else{
+    //     //     return view('frontend.index');
+    //     // }
+    // }
 
 }

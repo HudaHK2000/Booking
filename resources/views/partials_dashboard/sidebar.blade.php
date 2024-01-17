@@ -139,6 +139,34 @@
                     </ul>
                 </li>
                 {{-- end li  --}}
+                {{-- start li  --}}
+                <li class="nav-item pcoded-hasmenu">
+                    <a href="#!" class="nav-link ">
+                        <span class="pcoded-micon">
+                            <i class="feather icon-layout"></i>
+                        </span>
+                        <span class="pcoded-mtext">Booking</span>
+                    </a>
+                    <ul class="pcoded-submenu">
+                        {{-- <li><a href="{{ url('flightSchedule/create') }}" >Add</a></li> --}}
+                        <li><a href="{{ url('booking') }}">Show</a></li>
+                    </ul>
+                </li>
+                {{-- end li  --}}
+                {{-- start li  --}}
+                <li class="nav-item pcoded-hasmenu">
+                    <a href="#!" class="nav-link ">
+                        <span class="pcoded-micon">
+                            <i class="feather icon-layout"></i>
+                        </span>
+                        <span class="pcoded-mtext">Users</span>
+                    </a>
+                    <ul class="pcoded-submenu">
+                        {{-- <li><a href="{{ url('flightSchedule/create') }}" >Add</a></li> --}}
+                        <li><a href="{{ url('user') }}">Show</a></li>
+                    </ul>
+                </li>
+                {{-- end li  --}}
             </ul>
         </div>
     </div>

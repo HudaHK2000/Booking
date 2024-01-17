@@ -5,7 +5,7 @@
             <div class="row">
                 <div class="col-sm-2">
                     <div class="logo">
-                        <a href="index.html">
+                        <a href="{{ url('home') }}">
                             tour<span>Nest</span>
                         </a>
                     </div><!-- /.logo-->
@@ -21,7 +21,7 @@
                         </div><!-- /.navbar-header-->
                         <div class="collapse navbar-collapse">      
                             <ul class="nav navbar-nav navbar-right">
-                                <li class="smooth-menu"><a href="#home">home</a></li>
+                                <li class="@if (Request::is('home')) smooth-menu @endif"><a href="@if (Request::is('home')) #home @else {{ url('home') }} @endif">home</a></li>
                                 <li class="smooth-menu"><a href="#pack">Flight </a></li>
                                 <li class="smooth-menu"><a href="#clients">Clients Reviews</a></li>
                                 <li class="smooth-menu"><a href="#blog">Travel Class</a></li>
@@ -45,7 +45,9 @@
                                             @if(Auth::user()&&Auth::user()->passenger)
                                                 <li class=" @if (Request::is('profile')) active @endif"><a href="{{ url('profile') }}">profile</a></li>
                                             @endif
-                                            <li ><a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">{{ __('Logout') }}</a></li>
+                                            <li>
+                                                <a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">{{ __('Logout') }}</a>
+                                            </li>
                                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                                 @csrf
                                             </form>

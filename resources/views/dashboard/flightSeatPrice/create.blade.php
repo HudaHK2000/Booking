@@ -37,18 +37,18 @@
                     @endif
                     <input type="hidden" name="flight_id" value="{{ $flightSchedule->id }}">
                     <div class="form-row">
-                        <div class="form-group col-md-6 @error('business_class') input-was-validated @enderror">
-                            <label for="inputPriceSeatForBusinessClass">For Business Class :</label>
-                            <input type="number" name="business_class" class="form-control" id="inputPriceSeatForBusinessClass" placeholder="Price seat For Business Class" value="{{ old('business_class') }}">
-                            @error('business_class')
-                            <div>{{ $errors->first('business_class') }}</div>
-                            @enderror
-                        </div>
                         <div class="form-group col-md-6 @error('first_class') input-was-validated @enderror">
                             <label for="inputPriceSeatForFirstClass">For First Class :</label>
                             <input type="number" name="first_class" class="form-control" id="inputPriceSeatForFirstClass" placeholder="Price seat For First Class" value="{{ old('first_class') }}">
                             @error('first_class')
                             <div>{{ $errors->first('first_class') }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group col-md-6 @error('business_class') input-was-validated @enderror">
+                            <label for="inputPriceSeatForBusinessClass">For Business Class :</label>
+                            <input type="number" name="business_class" class="form-control" id="inputPriceSeatForBusinessClass" placeholder="Price seat For Business Class" value="{{ old('business_class') }}">
+                            @error('business_class')
+                            <div>{{ $errors->first('business_class') }}</div>
                             @enderror
                         </div>
                         <div class="form-group col-md-6 @error('premium_economy_class') input-was-validated @enderror">

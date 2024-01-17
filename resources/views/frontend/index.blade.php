@@ -1,10 +1,34 @@
 @extends('frontend.master')
-@section('title')
-Delight in the Allure of the Captivating Earth
-@endsection
 @section('content')	
+@if(session('Message'))
+    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); display: flex; justify-content: center; align-items: center; z-index: 100;">
+        <div style="background-color: #fff; padding: 20px; border-radius: 10px; text-align: center;">
+            <p>{{ session('Message') }}</p>
+            <button style="padding: 10px 20px; margin-top: 10px; background-color: #00d8ff;  border-radius: 10px; color: #fff; border: none; cursor: pointer;" onclick="window.location.href='{{ url('home') }}'">Exit</button>
+        </div>
+    </div>
+@endif
+<!--about-us start -->
+<section id="home" class="about-us">
+	<div class="container">
+		<div class="about-us-content">
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="single-about-us">
+						<div class="about-us-txt">
+							<h2>
+								Delight in the Allure of the Captivating Earth
+							</h2>
+						</div><!--/.about-us-txt-->
+					</div><!--/.single-about-us-->
+				</div><!--/.col-->
+				
+			</div><!--/.row-->
+		</div><!--/.about-us-content-->
+	</div><!--/.container-->
+</section><!--/.about-us-->
 			<!--travel-box start-->
-			<section  class="travel-box">
+			<section  class="travel-box" >
 				<div class="container">
 					<div class="row">
 						<div class="col-md-12">
@@ -67,7 +91,7 @@ Delight in the Allure of the Captivating Earth
 															<h2>departure</h2>
 															<div class="travel-check-icon">
 																<form action="#">
-																	<input type="datetime-local" name="departure" value="{{app('request')->input('departure')}}" class="form-control" placeholder="12 -01 - 2017 ">
+																	<input type="date" name="departure" value="{{app('request')->input('departure')}}" class="form-control" placeholder="12 -01 - 2017 ">
 																</form>
 															</div><!-- /.travel-check-icon -->
 														</div><!--/.single-tab-select-box-->
@@ -78,7 +102,7 @@ Delight in the Allure of the Captivating Earth
 															<h2>return</h2>
 															<div class="travel-check-icon">
 																<form action="#">
-																	<input type="datetime-local" name="return" value="{{app('request')->input('departure')}}" class="form-control"  placeholder="22 -01 - 2017 ">
+																	<input type="date" name="return" value="{{app('request')->input('departure')}}" class="form-control"  placeholder="22 -01 - 2017 ">
 																</form>
 															</div><!-- /.travel-check-icon -->
 														</div><!--/.single-tab-select-box-->
@@ -215,7 +239,7 @@ Delight in the Allure of the Captivating Earth
 			<!--service end-->	
 	
 			<!--packages start-->
-			<section id="pack" class="packages">
+			<section id="pack" class="packages" style="padding-top:0px">
 				<div class="container">
 				  	<div class="gallary-header text-center">
 						<h2>
@@ -228,9 +252,10 @@ Delight in the Allure of the Captivating Earth
 					<div class="packages-content">
 						<div class="row">
 						@foreach( $flightSchedules as $flightSchedule )
-						<form action="{{url('booking')}}" method="Get" enctype="multipart/form-data">
+						<form method="GET" action='{{url("flightDetails/$flightSchedule->id")}}'>
+						{{-- <form action="{{url('booking')}}" method="Get" enctype="multipart/form-data"> --}}
                             @csrf
-							<input type="hidden" value="{{ $flightSchedule->id }}">
+							{{-- <input type="hidden" value="{{ $flightSchedule->id }}"> --}}
 							<div class="col-md-4 col-sm-6">
 								<div class="single-package-item">
 								  <img src='{{ asset("flightImage/{$flightSchedule->image}") }}' alt="package-place" class="image-height-flight">
@@ -239,7 +264,7 @@ Delight in the Allure of the Captivating Earth
 									  {{ $flightSchedule->direction->destinationAirport->city->name }} 
 									  {{-- <span class="pull-right">{{ $flightSchedule->airplaneFlight->airplaneSeats()->where('travel_class_id',1)->first() }}</span> --}}
 									</h3>
-									<div class="packages-para">
+									<div class="packages-para" style="color: #565a50">
 										<h5 style="padding: 17px 0 0"> From City:
 											{{ $flightSchedule->direction->originAirport->city->name }} 
 										</h5>
@@ -553,5 +578,14 @@ Delight in the Allure of the Captivating Earth
 
 			</section><!--/.blog-->
 			<!--blog end-->
-	
+@endsection
+@section('script')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('exitButton').addEventListener('click', function() {
+            var Message = document.getElementById('Message');
+            Message.style.display = 'none';
+        });
+    });
+</script>
 @endsection

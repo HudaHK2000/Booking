@@ -1,8 +1,31 @@
 @extends('frontend.master')
-@section('title')
- 
-@endsection
 @section('content')
+@if(session('Message'))
+    <div id="Message" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); display: flex; justify-content: center; align-items: center; z-index: 100;">
+        <div style="background-color: #fff; padding: 20px; border-radius: 10px; text-align: center;">
+            <p>{{ session('Message') }}</p>
+            <button id="exitButton" style="padding: 10px 20px; margin-top: 10px; background-color: #00d8ff; border-radius: 10px; color: #fff; border: none; cursor: pointer;">Exit</button>
+        </div>
+    </div>
+@endif
+<section id="" class="about-us">
+	<div class="container">
+		<div class="about-us-content">
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="single-about-us">
+						<div class="about-us-txt">
+							<h2>
+								Register
+							</h2>
+						</div><!--/.about-us-txt-->
+					</div><!--/.single-about-us-->
+				</div><!--/.col-->
+				
+			</div><!--/.row-->
+		</div><!--/.about-us-content-->
+	</div><!--/.container-->
+</section><!--/.about-us-->
 <!--travel-box start-->
 <section  class="travel-box">
     <div class="container">
@@ -11,6 +34,15 @@
                 <div class="single-travel-boxes">
                     <div id="desc-tabs" class="desc-tabs">
 
+                        {{-- @if ($errors->any())
+                                    <div class="alert alert-danger">
+                                        <ul>
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @endif --}}
                         <ul class="nav nav-tabs" role="tablist">
                             <li role="presentation">
                                 <a href="#" >
@@ -145,4 +177,14 @@
 
 </section><!--/.travel-box-->
 <!--travel-box end-->
+@endsection
+@section('script')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('exitButton').addEventListener('click', function() {
+            var Message = document.getElementById('Message');
+            Message.style.display = 'none';
+        });
+    });
+</script>
 @endsection
