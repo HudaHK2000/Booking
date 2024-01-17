@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\Validator;
 class CountryController extends Controller
 {
     public function index(){
-        $countries = Country::orderBy('name', 'ASC')->get();
+        // $countries = Country::paginate(10)->orderBy('name', 'ASC');
+        $countries = Country::orderBy('name', 'ASC')->paginate(10);
         return view('dashboard.country.index',compact('countries'));
     }
     public function create()

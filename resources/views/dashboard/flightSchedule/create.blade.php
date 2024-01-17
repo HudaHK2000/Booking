@@ -57,6 +57,18 @@
                             <div>{{ $errors->first('airplane') }}</div>
                             @enderror 
                         </div>
+                        <div class="form-group col-md-6">
+                            <label @error('image') style="color: #e74c3c;"  @enderror >Image:</label>
+                            <div class="input-group cust-file-button mb-3">
+                                <div class="custom-file">
+                                    <input type="file" name="image" class="custom-file-input"  value="{{ old('image') }}"  id="inputFlightImage" @error('image') style="color: #e74c3c; border-color: #e74c3c;"  @enderror >
+                                    <label class="custom-file-label" for="inputFlightImage" id="inputFlightImageLabel" @error('image') style="color: #e74c3c; border-color: #e74c3c;"  @enderror >Choose file</label>
+                                </div>
+                            </div>
+                            @error('image')
+                                <div @error('image') style="color: #e74c3c; margin-top: -16px;"  @enderror >{{ $errors->first('image') }}</div>
+                            @enderror 
+                        </div>
                         <div class="form-group col-md-6  @error('departure_time') input-was-validated @enderror">
                             <label for="inputDepartureTime">Departure Date Time:</label>
                             <input type="datetime-local" name="departure_time" value="{{ old('departure_time') }}" class="form-control" id="inputDepartureTime" placeholder="Departure Date Time">
@@ -108,6 +120,12 @@
             } else {
                 $('#inputAirplane').empty();
             }
+        });
+        $('#inputFlightImage').change(function() {
+            var fullPath = $(this).val();
+            var fileName = fullPath.replace(/^.*[\\\/]/, '');
+            var label = $('#inputFlightImageLabel');
+            label.text(fileName);
         });
     });
 </script>

@@ -10,6 +10,8 @@ use App\Http\Controllers\AirplaneSeatController;
 use App\Http\Controllers\PassengerController;
 use App\Http\Controllers\DirectionController;
 use App\Http\Controllers\FlightScheduleController;
+use App\Http\Controllers\FlightSeatPriceController;
+use App\Http\Controllers\BookingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,16 +23,21 @@ use App\Http\Controllers\FlightScheduleController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/', function () {
-    return view('index');
-});
-Route::group(['middleware' => ['auth']],function(){
-    // Route::get('/', function () {
-    //     return view('index');
-    // });
-    
-    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Route::get('/', function () {
+//     return view('index');
+// });
 
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::group(['middleware' => ['auth']],function(){
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::post('/getallFlight', [App\Http\Controllers\HomeController::class, 'getAllFlight']);
+    Route::resource('passenger', PassengerController::class);
+
+
+});
+Route::group(['middleware' => ['passenger']],function(){
+        Route::get('booking',[BookingController::class,'create']);
+        Route::get('profile',[PassengerController::class,'profile']);
 });
 
 Route::middleware(['auth', 'admin'])->group(function () {
@@ -48,11 +55,13 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('direction', DirectionController::class);
     Route::resource('flightSchedule', FlightScheduleController::class);
     Route::get('/getAirplanesByAirline/{airlineId}', [FlightScheduleController::class,'getAirplanesByAirline']);
+    Route::get('flightSchedule', [FlightScheduleController::class,'index']);
+    
+    // Route::resource('flightSeatPrice', FlightSeatPriceController::class);
+    Route::get('/flightSeatPrice/{flightSchedule_id}', [FlightSeatPriceController::class,'create']);
+    Route::post('/flightSeatPrice', [FlightSeatPriceController::class,'store']);
+
 
 });
-
-
-Route::get('/add-passenger', [PassengerController::class,'create']);
-Route::get('/passenger-index', [PassengerController::class,'index']);
 
 Auth::routes();

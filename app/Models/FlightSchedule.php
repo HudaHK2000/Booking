@@ -19,4 +19,8 @@ class FlightSchedule extends Model
     public function airplaneFlight(){
         return $this->belongsTo('App\Models\Airplane','airplane_id','id');
     }
+    public function priceSeat(){
+        return $this->hasOne('App\Models\FlightSeatPrice');
+    }
+    
 }

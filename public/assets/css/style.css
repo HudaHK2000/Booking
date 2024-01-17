@@ -306,10 +306,10 @@ html,body{
     justify-content: center;
     align-items: center;
 	position: relative;
-	background: url(../../assets/images/home/banner.jpg)no-repeat;
+	background: url(../../assets/images/home/background.jpg)no-repeat;
 	background-size: cover;
 	background-position: center;
-	min-height: 1000px;
+	min-height: 500px;
 }
 .about-us:before{
 	position: absolute;
@@ -318,7 +318,7 @@ html,body{
 	left: 0;
 	width: 100%;
 	height: 100%;
-	background: rgba(0,122,207,.4);
+	background: rgb(0 31 36 / 37%);
 }
 
 /*about-us-content*/
@@ -326,12 +326,13 @@ html,body{
 	margin: -175px 0 0 0;
 }
 .about-us h2 {
-	color:#fff;	
-	font-size:84px;
-	text-transform: inherit;
-	max-width: 800px;
-	font-weight: 600;
-	line-height: 1.22;
+    color: #fff;
+    font-size: 70px;
+    text-transform: inherit;
+    max-width: 100%;
+    font-weight: 600;
+    line-height: 1.22;
+    margin-top: 150px;
 }
 .about-us h2 span{
 	color:#2bdab5;
@@ -458,6 +459,7 @@ html,body{
     font-family: 'Poppins', sans-serif;
     text-transform: capitalize;
     margin-bottom: 17px;
+    margin-top: 17px;
 }
 .travel-select-icon{
 	position:relative;
@@ -1562,3 +1564,20 @@ html,body{
 
 
 /*========================Thank you=================*/
+.input-by-user>input{
+    height: 48px;
+    border-radius: 0px;
+}
+.div-text-validation{
+    color: #f33030;
+}
+.div-input-validation>input , .div-input-validation>select , .div-input-validation {
+    color: #f33030;
+    border-color: #f33030;
+}
+.div-input-validation>input::placeholder{
+    color: #f33030;
+}
+.div-input-validation>select{
+    margin-bottom: 0px !important;
+}

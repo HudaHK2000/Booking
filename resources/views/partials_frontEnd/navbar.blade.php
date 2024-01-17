@@ -22,12 +22,10 @@
                         <div class="collapse navbar-collapse">      
                             <ul class="nav navbar-nav navbar-right">
                                 <li class="smooth-menu"><a href="#home">home</a></li>
-                                <li class="smooth-menu"><a href="#gallery">Destination</a></li>
-                                <li class="smooth-menu"><a href="#pack">Packages </a></li>
-                                <li class="smooth-menu"><a href="#spo">Special Offers</a></li>
-                                <li class="smooth-menu"><a href="#blog">blog</a></li>
-                                <li class="smooth-menu"><a href="#subs">subscription</a></li>
-                                <li class="dropdown">
+                                <li class="smooth-menu"><a href="#pack">Flight </a></li>
+                                <li class="smooth-menu"><a href="#clients">Clients Reviews</a></li>
+                                <li class="smooth-menu"><a href="#blog">Travel Class</a></li>
+                                <li class="dropdown @if (Request::is('profile')) active @endif">
                                     @guest
                                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">User <span class="caret"></span></a>
                                         <ul class="dropdown-menu" role="menu" style="background-color: #4D4E54;">
@@ -43,6 +41,9 @@
                                         <ul class="dropdown-menu" role="menu" style="background-color: #4D4E54;">
                                             @if (Auth::user()&& Auth::user()->is_admin == 1)
                                                 <li><a href="{{ url('dashboard') }}">Dashboard</a></li>
+                                            @endif
+                                            @if(Auth::user()&&Auth::user()->passenger)
+                                                <li class=" @if (Request::is('profile')) active @endif"><a href="{{ url('profile') }}">profile</a></li>
                                             @endif
                                             <li ><a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">{{ __('Logout') }}</a></li>
                                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

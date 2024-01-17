@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\FlightSeatPrice;
+use App\Models\FlightSchedule;
+use Illuminate\Support\Facades\Validator;
+
 use Illuminate\Http\Request;
 
 class FlightSeatPriceController extends Controller
@@ -22,9 +25,11 @@ class FlightSeatPriceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($flightSchedule_id)
     {
-        //
+        $flightSchedule = FlightSchedule::find($flightSchedule_id);
+        // dd($flightSchedule , $flightSchedule->airplaneFlight->model ,$flightSchedule->airplaneFlight->airplaneSeats);
+        return view('dashboard.flightSeatPrice.create',compact('flightSchedule'));
     }
 
     /**
@@ -35,7 +40,37 @@ class FlightSeatPriceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'business_class' => ['required'],
+            'first_class' => ['required'],
+            'premium_economy_class' => ['required'],
+            'economy_class' => ['required'],
+        ]
+            ,[])->validate();
+            $flightSchedule = FlightSchedule::find($request->flight_id);
+            $number_of_seats = $flightSchedule->airplaneFlight->number_of_seats;
+            if(isset($number_of_seats)){
+                for( $i = 1 ; $i <= $number_of_seats ; $i++){
+                    $flight_seat_price = new FlightSeatPrice();
+                    $flight_seat_price->flight_id = $flightSchedule->id;
+                    $flight_seat_price->airplane_seat_id = $i;
+                    $seat_id = $flightSchedule->airplaneFlight->airplaneSeats()->where('seat_id', $i)->first();
+                    if($seat_id->travel_class_id  == 1 ){
+                        $flight_seat_price->price = $request->economy_class;
+                    }elseif($seat_id->travel_class_id == 2 ){
+                        $flight_seat_price->price = $request->premium_economy_class;
+                    }elseif($seat_id->travel_class_id == 3 ){
+                        $flight_seat_price->price = $request->first_class;
+                    }elseif($seat_id->travel_class_id == 4 ){
+                        $flight_seat_price->price = $request->business_class;
+                    }else{
+                        $flight_seat_price->price = 0;
+                    }
+                    $flight_seat_price->save();
+                }
+            }
+        return redirect()->back()->with('success','The addition flight to the schedule was completed successfully.');
+    
     }
 
     /**

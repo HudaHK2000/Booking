@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('flight_schedules', function (Blueprint $table) {
             $table->id();
+            $table->string('image');
             $table->bigInteger('direction_id')->unsigned();
             $table->bigInteger('airplane_id')->unsigned();
             $table->bigInteger('flight_status_id')->unsigned();

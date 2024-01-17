@@ -5085,6 +5085,7 @@ input[type="button"].btn-block {
     padding-left: 0;
     list-style: none;
     border-radius: 2px;
+    justify-content: center;
 }
 
 .page-link {
@@ -30193,4 +30194,7 @@ new-task label input[type=checkbox] {
 .input-was-validated select:focus {
     border-color: #e74c3c;
     color: #e74c3c;
+}
+img.image-height-flight{
+    height: 300px !important;
 }

@@ -18,4 +18,7 @@ class AirplaneSeat extends Model
     public function travelClass(){
         return $this->belongsTo('App\Models\TravelClass','travel_class_id','id');
     }
+    public function seatPrice(){
+        return $this->hasOne('App\Models\FlightSeatPrice');
+    }
 }

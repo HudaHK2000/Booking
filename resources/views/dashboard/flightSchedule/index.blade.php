@@ -5,6 +5,17 @@
         <div class="card">
             <div class="card-header">
                 <h5>Flights Scheduls</h5>
+                <div class="card-header-right">
+                    <div class="btn-group card-option">
+                        <button type="button" class="btn dropdown-toggle btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="feather icon-more-horizontal"></i>
+                        </button>
+                        <ul class="list-unstyled card-option dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(12px, 28px, 0px);">
+                            <li class="dropdown-item full-card"><a href="#!"><span style=""><i class="feather icon-maximize"></i> maximize</span><span style="display: none;"><i class="feather icon-minimize"></i> Restore</span></a></li>
+                            <li class="dropdown-item minimize-card"><a href="#!"><span><i class="feather icon-minus"></i> collapse</span><span style="display:none"><i class="feather icon-plus"></i> expand</span></a></li>
+                            <li class="dropdown-item reload-card"><a href="#!"><i class="feather icon-refresh-cw"></i> reload</a></li>                        </ul>
+                    </div>
+                </div>
             </div>   
             <div class="card-body table-border-style">
                 <div class="table-responsive">
@@ -22,11 +33,13 @@
                                 <th>#</th>
                                 <th>From Airpot</th>
                                 <th>To Airport</th>
+                                <th>Image</th>
                                 <th>Airline</th>
                                 <th>Airplane</th>
                                 <th>Status</th>
                                 <th>Departure Date/Time</th>
                                 <th>Arrival Date/time</th>
+                                <th>Price</th>
                                 <th>Edit</th>
                                 <th>Delete</th>
                             </tr>
@@ -39,11 +52,31 @@
                                 </td>
                                 <td style="text-transform: capitalize;">{{ $flightSchedule->direction->originAirport->name }}</td>
                                 <td style="text-transform: capitalize;">{{ $flightSchedule->direction->destinationAirport->name }}</td>
+                                <td>
+                                    <img src='{{ asset("flightImage/{$flightSchedule->image}") }}' width="50px" alt="">
                                 <td>{{ $flightSchedule->airplaneFlight->airline->name }}</td>
                                 <td>{{ $flightSchedule->airplaneFlight->model }}</td>
-                                <td>{{ $flightSchedule->flightStatu->name }}</td>
+                                <td>
+                                    @if ($flightSchedule->flightStatu->name == 'Done')
+                                        <span  class="btn btn-outline-info" >
+                                            <i class="feather mr-2 icon-check-circle"></i>
+                                            {{ $flightSchedule->flightStatu->name }}
+                                        </span>
+                                    @elseif ($flightSchedule->flightStatu->name == 'Waiting')
+                                        <span  class="btn btn-outline-info" >
+                                            <i class="feather mr-2 icon-info"></i>
+                                            {{ $flightSchedule->flightStatu->name }}
+                                        </span>
+                                    @endif
+                                  
+                                </td>
                                 <td>{{ $flightSchedule->departure_time }}</td>
                                 <td>{{ $flightSchedule->arrival_time }}</td>
+                                <td>
+                                    <a href='{{ url("flightSeatPrice/$flightSchedule->id") }}' class="btn  btn-outline-success">
+                                        Add Price
+                                    </a>
+                                </td>
                                 <td>
                                     <a href='{{ url("flightSchedule/$flightSchedule->id/edit") }}' class="btn btn-outline-primary">
                                         Edit

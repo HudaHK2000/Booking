@@ -9,11 +9,14 @@ use App\Models\Airplane;
 use App\Models\FlightStatu;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use App\Traits\ImageTrait;
 
 use Illuminate\Http\Request;
 
 class FlightScheduleController extends Controller
 {
+    use ImageTrait ;
+
     /**
      * Display a listing of the resource.
      *
@@ -53,6 +56,7 @@ class FlightScheduleController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'airports' => ['required'],
+            'image' => ['required'],
             'airline' => ['required'],
             'airplane' => ['required'],
             'departure_time' => [
@@ -102,6 +106,7 @@ class FlightScheduleController extends Controller
         $direction = Direction::find($request->airports);
         $flightSchedule = new FlightSchedule();
         $flightSchedule->direction_id = $direction->id ;
+        $flightSchedule->image = $this->verifyAndUpload($request , 'image' , 'flightImage');
         $flightSchedule->airplane_id = $request->airplane ;
         $flightSchedule->departure_time = $request->departure_time ;
         $flightSchedule->arrival_time = $request->arrival_time ;
@@ -196,6 +201,15 @@ class FlightScheduleController extends Controller
             ,[])->validate();
         
         $direction = Direction::find($request->airports);
+        if (!empty ($request->file('image'))) {
+            if(\File::exists(public_path('flightImage/').$flightSchedule->image)){
+                \File::delete(public_path('flightImage/').$flightSchedule->image);
+            }
+            $imageName = uniqid() . $request->file('image')->getClientOriginalName();
+
+            $request->file('image')->move(public_path('flightImage'), $imageName);
+            $flightSchedule->image= $imageName;
+        }
         $flightSchedule->direction_id = $direction->id ;
         $flightSchedule->airplane_id = $request->airplane ;
         $flightSchedule->departure_time = $request->departure_time ;
@@ -215,6 +229,9 @@ class FlightScheduleController extends Controller
     public function destroy($id)
     {
         $flightSchedule = FlightSchedule::find($id);
+        if(\File::exists(public_path('flightImage/').$flightSchedule->image)){
+            \File::delete(public_path('flightImage/').$flightSchedule->image);
+        }
         $flightSchedule->delete();
         return redirect()->back()->with('success','The deletion was completed successfully.');
     }

@@ -15,6 +15,7 @@ class FlightStatuSeeder extends Seeder
     public function run()
     {
         DB::table('flight_status')->insert([
+            ['name' => 'Done'],
             ['name' => 'Waiting'],
             ['name' => 'Takeoff'],
             ['name' => 'Landing'],

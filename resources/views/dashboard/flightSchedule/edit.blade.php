@@ -77,8 +77,24 @@
                                 <div>{{ $errors->first('arrival_time') }}</div>
                             @enderror 
                         </div>
-                
                         <input type="hidden" name="id" value="{{ $flightSchedule->id }}">
+
+                        <div class="form-group col-md-6">
+                            <label @error('image') style="color: #e74c3c;"  @enderror >Image:</label>
+                            <div class="input-group cust-file-button mb-3">
+                                <div class="custom-file">
+                                    <input type="file" name="image" class="custom-file-input"  value="{{ old('image') }}"  id="inputFlightImage" @error('image') style="color: #e74c3c; border-color: #e74c3c;"  @enderror >
+                                    <label class="custom-file-label" for="inputFlightImage" id="inputFlightImageLabel" @error('image') style="color: #e74c3c; border-color: #e74c3c;"  @enderror >
+                                        {{ $flightSchedule->image }}
+                                    </label>
+                                </div>
+                            </div>
+                            <img src='{{ asset("flightImage/{$flightSchedule->image}") }}' width="50px" alt="">
+
+                            @error('image')
+                                <div @error('image') style="color: #e74c3c; margin-top: -16px;"  @enderror >{{ $errors->first('image') }}</div>
+                            @enderror 
+                        </div>
                     </div>
                     <button type="submit" class="btn  btn-primary">Edit</button>
                 </form>
@@ -116,6 +132,12 @@
             } else {
                 $('#inputAirplane').empty();
             }
+        });
+        $('#inputFlightImage').change(function() {
+            var fullPath = $(this).val();
+            var fileName = fullPath.replace(/^.*[\\\/]/, '');
+            var label = $('#inputFlightImageLabel');
+            label.text(fileName);
         });
     });
 </script>
