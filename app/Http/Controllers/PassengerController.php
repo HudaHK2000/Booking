@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Passenger;
 use App\Models\Country;
 use App\Models\User;
+use App\Models\Booking;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Traits\ImageTrait;
@@ -20,7 +21,9 @@ class PassengerController extends Controller
     {
         $countries = Country::all();
         $passenger = Passenger::where('user_id',\auth::user()->id)->first();
-        return view('frontend.profile',compact(['passenger','countries']));
+        $profileBookings = Booking::where('passenger_id', \auth::user()->id)->get();
+        $countNumSeat = $profileBookings->count();
+        return view('frontend.profile',compact(['passenger','countries','profileBookings','countNumSeat']));
     }
 
 

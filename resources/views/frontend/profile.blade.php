@@ -168,4 +168,55 @@
 
 </section><!--/.travel-box-->
 <!--travel-box end-->
+
+<div class="container">
+    <div class="packages-content">
+        <div class="row contact-form">
+            {{-- <div class="col-md-12"> --}}
+            <table class="table">
+                      <thead>
+                      <tr>
+                          <th>Flights Name</th>
+                          <th>Type of reserved seat</th>
+                          <th>Seat price</th>
+                          {{-- <th>Delete</th> --}}
+                      </tr>
+                      </thead>
+                      <tbody>
+                        @foreach($profileBookings as $profileBooking)
+                        <tr>
+                            <td> From {{$profileBooking->flightSeat->flightSchedule->direction->originAirport->city->name}} To {{$profileBooking->flightSeat->flightSchedule->direction->destinationAirport->city->name}}</td>
+                            <td>{{$profileBooking->flightSeat->seat->travelClass->name}}</td>
+                             <td>{{$profileBooking->flightSeat->price}}</td>
+                            {{-- <td>
+                                <form method="post" action='{{url("")}}'>
+                                    @method('delete')
+                                    @csrf
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </td>  --}}
+                        </tr>
+                        @endforeach
+                      </tbody>
+                  </table>
+                  <div class="row">
+                    <div class="col-md-12">
+                        <p>Number of reserved seats: {{$countNumSeat}}</p>
+                        @php
+                            $totalPrice = 0;
+                        @endphp
+                        @foreach($profileBookings as $profileBooking)
+                            @php
+                                $totalPrice += $profileBooking->flightSeat->price;
+                            @endphp
+                        @endforeach
+                        <p>Total Price: {{$totalPrice}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div><!--/.packages-content-->
+    
+</div>
+
 @endsection
