@@ -72,9 +72,9 @@ class BookingController extends Controller
                     $book->save();
                 }
             }
-            return redirect()->back()->with('Message', 'Your reservation has been completed successfully');
+            return redirect('profile')->with('Message', 'Your reservation has been completed successfully');
         }else{
-            return redirect()->back()->with('Message', 'There are not enough seats on the plane');
+            return redirect()->with('Message', 'There are not enough seats on the plane');
         }
         
     }

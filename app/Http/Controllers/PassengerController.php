@@ -21,8 +21,8 @@ class PassengerController extends Controller
     {
         $countries = Country::all();
         $passenger = Passenger::where('user_id',\auth::user()->id)->first();
-        $profileBookings = Booking::where('passenger_id', \auth::user()->id)->get();
-        $countNumSeat = $profileBookings->count();
+        $profileBookings = Booking::where('Passenger_id', $passenger->id)->get();
+        $countNumSeat = Booking::where('Passenger_id', \auth::user()->id)->get()->count();
         return view('frontend.profile',compact(['passenger','countries','profileBookings','countNumSeat']));
     }
 
@@ -122,8 +122,7 @@ class PassengerController extends Controller
         }
         $passenger->user_id = \Auth::user()->id ;
         $passenger->save();
-        return redirect()->back()->with('Message', 'Your data has been successfully modified');
-
+        return redirect('home')->with('Message', 'Your data has been successfully modified');
     }
 
     /**

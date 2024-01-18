@@ -30,8 +30,9 @@ use App\Http\Controllers\HomeController;
 // });
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+
 Route::group(['middleware' => ['auth']],function(){
-    Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::post('/getallFlight', [HomeController::class, 'getAllFlight']);
     Route::resource('passenger', PassengerController::class );
     Route::get('/flightDetails/{id}', [HomeController::class, 'flightDetails']);
@@ -39,7 +40,7 @@ Route::group(['middleware' => ['auth']],function(){
 
 
 });
-Route::group(['middleware' => ['passenger']],function(){
+Route::group(['middleware' => ['auth','passenger']],function(){
     Route::post('booking',[BookingController::class,'store']);
     Route::get('profile',[PassengerController::class,'profile']);
 });
