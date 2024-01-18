@@ -78,7 +78,30 @@ class BookingController extends Controller
         }
         
     }
-
+    public function calculateTotalPrice(Request $request){
+        $adults = $request->input('adults');
+        $childs = $request->input('childs');
+        $selectedClass = $request->input('class');
+        $flightId = $request->input('flightId');
+        // dd($selectedClass,$childs , $adults);
+        // قم بحساب السعر بناءً على عدد البالغين والأطفال والفئة المختارة
+        $totalPrice = $this->calculatePrice($adults, $childs, $selectedClass, $flightId);
+        
+        return response()->json(['totalPrice' => $totalPrice]);
+    }
+    private function calculatePrice($adults, $childs, $selectedClass, $flightId){
+        $count = $adults + $childs;
+        $total_price = FlightSeatPrice::where('flight_id', $flightId)
+            ->whereHas('seat', function($query) use ($selectedClass) {
+                $query->where('travel_class_id', $selectedClass);
+            })->first();
+        if($total_price){
+            $total_price = $total_price->price * $count;
+            return $total_price;
+        }
+        return 0; // إذا لم يتم العثور على سعر
+    }
+    
     /**
      * Display the specified resource.
      *

@@ -95,6 +95,7 @@
                             @endforeach
                         </tbody>
                     </table>
+                    {!! $flightSchedules->links() !!}
                 </div>
             </div>
         </div>

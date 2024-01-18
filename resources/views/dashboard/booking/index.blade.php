@@ -33,9 +33,13 @@
                                 <td>
                                     <?php echo $count++ ?>
                                 </td>
-                                <td style="text-transform: uppercase;">{{ $booking->passenger->first_name }} {{ $booking->passenger->last_name }}</td>
-                                <td style="text-transform: capitalize;">From {{ $booking->flightSeat->flightSchedule->direction->originAirport->city->name }}  To {{ $booking->flightSeat->flightSchedule->direction->destinationAirport->city->name }}</td>
-
+                                <td style="text-transform: capitalize;">{{ $booking->passenger->first_name }} {{ $booking->passenger->last_name }}</td>
+                                <td style="text-transform: capitalize;">
+                                    <a href='{{ url("flightSchedule/{$booking->flightSeat->flightSchedule->id}") }}'>From {{ $booking->flightSeat->flightSchedule->direction->originAirport->city->name }} 
+                                        To {{ $booking->flightSeat->flightSchedule->direction->destinationAirport->city->name }}
+                                   </a>    
+                                </td>
+ 
                             </tr>
                             @endforeach
                         </tbody>

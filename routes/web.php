@@ -35,6 +35,8 @@ Route::group(['middleware' => ['auth']],function(){
     Route::post('/getallFlight', [HomeController::class, 'getAllFlight']);
     Route::resource('passenger', PassengerController::class );
     Route::get('/flightDetails/{id}', [HomeController::class, 'flightDetails']);
+    Route::get('/calculateTotalPrice',[BookingController::class, 'calculateTotalPrice']);
+
 
 });
 Route::group(['middleware' => ['passenger']],function(){

@@ -47,7 +47,7 @@
                             <div role="tabpanel" class="tab-pane active fade in" id="flights">
                                 <form action="{{url('booking')}}" method="post">
                                 @csrf
-                                <input type="hidden" value="{{ $flightSchedule->id }}" name="flight_id">
+                                <input type="hidden" value="{{ $flightSchedule->id }}" id="flight_id" name="flight_id">
                                 <div class="tab-para">
                                     <div class="row">
                                         <div class="col-lg-4">
@@ -55,6 +55,30 @@
                                                 {{$flightSchedule->direction->originAirport->city->name }} >> {{$flightSchedule->direction->destinationAirport->city->name }}
                                             </h4>
                                             <img src='{{ asset("flightImage/{$flightSchedule->image}") }}' alt="">
+                                            @if(isset($price[0]->price))
+                                                <h5 style="margin-block: 20px">
+                                                    The price of a seat in first class: 
+                                                    {{ $price[0]->price }} $
+                                                </h5>
+                                            @endif
+                                            @if(isset($price[1]->price))
+                                                <h5 style="margin-block: 20px">
+                                                    The price of a seat in business class: 
+                                                    {{ $price[1]->price }} $
+                                                </h5>
+                                            @endif
+                                            @if(isset($price[2]->price))
+                                                <h5 style="margin-block: 20px">
+                                                    The price of a seat in premium class: 
+                                                    {{ $price[2]->price }} $
+                                                </h5>
+                                            @endif
+                                            @if(isset($price[3]->price))
+                                                <h5 style="margin-block: 20px">
+                                                    The price of a seat in economy class: 
+                                                    {{ $price[3]->price }} $
+                                                </h5>
+                                            @endif
                                         </div>
                                         <div class="col-lg-8">
                                             <div class="col-lg-6 col-md-6 col-sm-12">
@@ -109,7 +133,7 @@
                                                 <div class="single-tab-select-box">
                                                     <h2>adults</h2>
                                                     <div class="travel-select-icon">
-                                                        <select class="form-control" name="adults">
+                                                        <select class="form-control" id="adults" name="adults">
                                                               <option value="1">1</option><!-- /.option-->
                                                             @for ($i = 2; $i < 9; $i++)																	
                                                                 <option value="{{$i}}">{{$i}}</option><!-- /.option-->
@@ -122,7 +146,7 @@
                                                 <div class="single-tab-select-box">
                                                     <h2>childs</h2>
                                                     <div class="travel-select-icon">
-                                                        <select class="form-control" name="childs">
+                                                        <select class="form-control" id="childs" name="childs">
                                                             <option value="0">0</option><!-- /.option-->
                                                             @for ($i = 1; $i < 9; $i++)																	
                                                                 <option value="{{$i}}">{{$i}}</option><!-- /.option-->
@@ -135,7 +159,7 @@
                                                 <div class="single-tab-select-box">
                                                     <h2>class</h2>
                                                     <div class="travel-select-icon @error('class') div-input-validation @enderror" >
-                                                        <select class="form-control" name="class">
+                                                        <select class="form-control" id="class" name="class">
                                                             <option value="">enter class</option><!-- /.option-->
                                                             @foreach ($classes as $class)
                                                             @if ($class->name != 'Disabled')	
@@ -149,8 +173,16 @@
                                                     </div><!-- /.travel-select-icon -->
                                                 </div><!--/.single-tab-select-box-->
                                             </div><!--/.col-->
+                                            <div class="col-lg-6 col-md-6 col-sm-12">
+                                                <div class="single-tab-select-box">
+                                                    <h2>Total Price</h2>
+                                                    <div class="input-by-user">
+                                                        <input type="text" id="totalPrice" name="" value="0 $" class="form-control" readonly>
+                                                    </div><!-- /.travel-select-icon -->
+                                                </div><!--/.single-tab-select-box-->
+                                            </div><!--/.col-->
+                                            
                                         </div>       
-                                        
                                     </div><!--/.row-->
                                     <div class="row">
                                         <div class="clo-sm-5">
@@ -178,11 +210,41 @@
 @endsection
 @section('script')
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('exitButton').addEventListener('click', function() {
-            var Message = document.getElementById('Message');
-            Message.style.display = 'none';
-        });
+    $(document).ready(function(){
+    function calculateTotalPrice(){
+        var adults = $('#adults').val();
+        // console.log(adults);
+        var childs = $('#childs').val();
+        // console.log(childs);
+        var selectedClass = $('#class').val();
+        var flightId = $('#flight_id').val();
+        // console.log(flightId);
+        
+        $.ajax({
+                    method    : "Get",
+                    url       : "{{ url('/calculateTotalPrice') }}",
+                    data      : {
+                        // "_token": "{{csrf_token()}}",
+                        adults: adults,
+                        childs: childs,
+                        class: selectedClass,
+                        flightId : flightId
+                    },
+                    dataType  : "JSON",
+                    success: function(response){
+                        $('#totalPrice').val(response.totalPrice + " $");
+                    }
+                });
+    }
+    
+    // عند تغيير أحد حقول اختيار البالغين والأطفال، أو حقل اختيار الفئة
+    $('#adults, #childs, #class').change(function(){
+        calculateTotalPrice();
     });
+    $('#exitButton').click(function(){
+        $('#Message').hide();
+    });
+});
+
 </script>
 @endsection

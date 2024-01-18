@@ -23,7 +23,6 @@
                             <ul class="nav navbar-nav navbar-right">
                                 <li class="@if (Request::is('home')) smooth-menu @endif"><a href="@if (Request::is('home')) #home @else {{ url('home') }} @endif">home</a></li>
                                 <li class="smooth-menu"><a href="#pack">Flight </a></li>
-                                <li class="smooth-menu"><a href="#clients">Clients Reviews</a></li>
                                 <li class="smooth-menu"><a href="#blog">Travel Class</a></li>
                                 <li class="dropdown @if (Request::is('profile')) active @endif">
                                     @guest
@@ -54,7 +53,7 @@
                                         </ul>
                                     @endguest
                                 </li>
-                                <li><button class="book-btn">book now</button></li>
+                                {{-- <li><button class="book-btn">book now</button></li> --}}
                             </ul>
                         </div><!-- /.navbar-collapse -->
                         

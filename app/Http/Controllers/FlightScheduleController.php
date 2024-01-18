@@ -7,6 +7,7 @@ use App\Models\Direction;
 use App\Models\Airline;
 use App\Models\Airplane;
 use App\Models\FlightStatu;
+use App\Models\FlightSeatPrice;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use App\Traits\ImageTrait;
@@ -24,7 +25,7 @@ class FlightScheduleController extends Controller
      */
     public function index()
     {
-        $flightSchedules = FlightSchedule::all();
+        $flightSchedules = FlightSchedule::paginate(4);
         return view('dashboard.flightSchedule.index',compact('flightSchedules'));
 
     }
@@ -125,7 +126,19 @@ class FlightScheduleController extends Controller
      */
     public function show(FlightSchedule $flightSchedule)
     {
-        //
+        $classes = FlightSeatPrice::where('flight_id', $flightSchedule->id)
+        ->with('seat.travelClass')
+        ->get()
+        ->pluck('seat.travelClass')
+        ->unique('id');
+        
+        for( $i = 0 ; $i < 4 ; $i++){
+            $price[$i] = FlightSeatPrice::where('flight_id', $flightSchedule->id)
+            ->whereHas('seat', function($query) use ($i) {
+                $query->where('travel_class_id', $i+1 );
+            })->first();
+        }
+        return view('dashboard.flightSchedule.show',compact(['flightSchedule','price']));
     }
 
     /**

@@ -63,39 +63,7 @@
                             @endforeach
                         </tbody>
                     </table>
-                    {{-- <nav aria-label="...">
-                        <ul class="pagination">
-                            <li class="page-item {{ ($countries->currentPage() == 1) ? 'disabled' : '' }}">
-                                <a class="page-link" href="{{ $countries->previousPageUrl() }}">Previous</a>
-                            </li>
-                            @foreach(range(1, $countries->lastPage()) as $page)
-                                <li class="page-item {{ ($page == $countries->currentPage()) ? 'active' : '' }}">
-                                    <a class="page-link" href="{{ $countries->url($page) }}">{{ $page }}</a>
-                                </li>
-                            @endforeach
-                            <li class="page-item {{ ($countries->currentPage() == $countries->lastPage()) ? 'disabled' : '' }}">
-                                <a class="page-link" href="{{ $countries->nextPageUrl() }}">Next</a>
-                            </li>
-                        </ul>
-                    </nav> --}}
-                    {{-- <nav aria-label="Page navigation m-auto"> --}}
                         {!! $countries->links() !!}
-                        {{-- <ul class="pagination">
-                            <li class="page-item {{ $countries->onFirstPage() ? 'disabled' : '' }}">
-                                <a class="page-link" href="{{ $countries->previousPageUrl() }}" aria-label="Previous">
-                                    <span aria-hidden="true">&laquo;</span>
-                                    <span class="sr-only">Previous</span>
-                                </a>
-                            </li>
-                            {{ $countries->links() }}
-                            <li class="page-item {{ $countries->hasMorePages() ? '' : 'disabled' }}">
-                                <a class="page-link" href="{{ $countries->nextPageUrl() }}" aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                    <span class="sr-only">Next</span>
-                                </a>
-                            </li>
-                        </ul> --}}
-                    {{-- </nav> --}}
                     
                 </div>
             </div>
