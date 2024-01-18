@@ -32,11 +32,11 @@ use App\Http\Controllers\HomeController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
+Route::post('/getallFlight', [HomeController::class, 'getAllFlight']);
+Route::get('/flightDetails/{id}', [HomeController::class, 'flightDetails']);
+Route::get('/calculateTotalPrice',[BookingController::class, 'calculateTotalPrice']);
 Route::group(['middleware' => ['auth']],function(){
-    Route::post('/getallFlight', [HomeController::class, 'getAllFlight']);
     Route::resource('passenger', PassengerController::class );
-    Route::get('/flightDetails/{id}', [HomeController::class, 'flightDetails']);
-    Route::get('/calculateTotalPrice',[BookingController::class, 'calculateTotalPrice']);
 
 
 });
