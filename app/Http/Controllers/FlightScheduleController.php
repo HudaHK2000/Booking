@@ -131,14 +131,34 @@ class FlightScheduleController extends Controller
         ->get()
         ->pluck('seat.travelClass')
         ->unique('id');
-        
+        // dd($classes);
         for( $i = 0 ; $i < 4 ; $i++){
             $price[$i] = FlightSeatPrice::where('flight_id', $flightSchedule->id)
             ->whereHas('seat', function($query) use ($i) {
                 $query->where('travel_class_id', $i+1 );
             })->first();
         }
-        return view('dashboard.flightSchedule.show',compact(['flightSchedule','price']));
+        $allSeat = [];
+        foreach($classes as $class) {
+            $allSeat[$class->name] = FlightSeatPrice::where('flight_id', $flightSchedule->id)
+            ->whereHas('seat', function($query) use ($class) {
+                $query->where('travel_class_id', $class->id);
+            })->count();
+        }
+        // dd($allSeat);
+        $seatsCount = [];
+        foreach($classes as $class) {
+            $seatsCount[$class->name] = FlightSeatPrice::where('flight_id', $flightSchedule->id)
+                ->where('book', 1) // حجزت
+                ->whereHas('seat', function($query) use ($class) {
+                    $query->where('travel_class_id', $class->id);
+                })->count();
+        }
+
+        // الآن يمكنك عرض عدد الكراسي التي تم حجزها لكل نوع من الأنواع
+        // dd($seatsCount);
+
+        return view('dashboard.flightSchedule.show',compact(['flightSchedule','price','seatsCount','allSeat']));
     }
 
     /**

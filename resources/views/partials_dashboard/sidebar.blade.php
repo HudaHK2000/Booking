@@ -4,7 +4,7 @@
             
             <div class="">
                 <div class="main-menu-header">
-                    <img class="img-radius" src="{{ asset('assets_dashboard/images/user/avatar-2.jpg')}}" alt="User-Profile-Image">
+                    {{-- <img class="img-radius" src="{{ asset('assets_dashboard/images/user/avatar-2.jpg')}}" alt="User-Profile-Image"> --}}
                     <div class="user-details">
                         {{-- <span>{{ Auth::user()->name }}</span> --}}
                         <div id="more-details">{{ Auth::user()->name }}<i class="fa fa-chevron-down m-l-5"></i></div>
@@ -12,8 +12,8 @@
                 </div>
                 <div class="collapse" id="nav-user-link">
                     <ul class="list-unstyled">
-                        <li class="list-group-item"><a href="user-profile.html"><i class="feather icon-user m-r-5"></i>View Profile</a></li>
-                        <li class="list-group-item"><a href="#!"><i class="feather icon-settings m-r-5"></i>Settings</a></li>
+                        {{-- <li class="list-group-item"><a href="user-profile.html"><i class="feather icon-user m-r-5"></i>View Profile</a></li> --}}
+                        {{-- <li class="list-group-item"><a href="#!"><i class="feather icon-settings m-r-5"></i>Settings</a></li> --}}
                         <li class="list-group-item">
                             <a href="{{ route('logout') }}"  onclick="event.preventDefault();document.getElementById('logout-form').submit();" >
                                 <i class="feather icon-log-out m-r-5"></i>
@@ -28,9 +28,9 @@
             </div>
             
             <ul class="nav pcoded-inner-navbar ">
-                <li class="nav-item pcoded-menu-caption">
+                {{-- <li class="nav-item pcoded-menu-caption">
                     <label>Navigation</label>
-                </li>
+                </li> --}}
                 <li class="nav-item">
                     <a href="{{ url('home') }}" class="nav-link ">
                         <span class="pcoded-micon">

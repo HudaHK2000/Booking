@@ -24,7 +24,7 @@
                         </button>
                     </div>
                 </li>
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <div class="dropdown">
                         <a class="dropdown-toggle h-drop" href="#" data-toggle="dropdown">
                             Dropdown
@@ -37,8 +37,8 @@
                             </ul>
                         </div>
                     </div>
-                </li>
-                <li class="nav-item">
+                </li> --}}
+                {{-- <li class="nav-item">
                     <div class="dropdown mega-menu">
                         <a class="dropdown-toggle h-drop" href="#" data-toggle="dropdown">
                             Mega
@@ -90,7 +90,7 @@
                             </div>
                         </div>
                     </div>
-                </li>
+                </li> --}}
             </ul>
             <ul class="navbar-nav ml-auto">
                 <li>

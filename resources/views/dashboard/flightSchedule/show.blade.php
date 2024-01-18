@@ -19,39 +19,132 @@
                 </div>
             </div>
             <div class="card-body">
-                <p>Flight Number: {{ $flightSchedule->id }} </p>
-                <p>From Airport: {{ $flightSchedule->direction->originAirport->name }} <br> To Airport: {{ $flightSchedule->direction->destinationAirport->name }}</p>
-                <p>Airline: {{ $flightSchedule->airplaneFlight->airline->name }} <br> With Airplane: {{ $flightSchedule->airplaneFlight->model }}</p>
-                <p>Number of Seats: {{ $flightSchedule->airplaneFlight->number_of_seats }}</p>
-                <p>
-                    @if(isset($price[0]->price))
-                    {{-- <p style="margin-block: 20px"> --}}
-                        The price of a seat in first class: 
-                        {{ $price[0]->price }} $
-                    {{-- </p> --}}
-                    <br>
-                @endif
-                @if(isset($price[1]->price))
-                    {{-- <p style="margin-block: 20px"> --}}
-                        The price of a seat in business class: 
-                        {{ $price[1]->price }} $
-                    {{-- </p> --}}
-                    <br>
-                @endif
-                @if(isset($price[2]->price))
-                    {{-- <p style="margin-block: 20px"> --}}
-                        The price of a seat in premium class: 
-                        {{ $price[2]->price }} $
-                    {{-- </p> --}}
-                    <br>
-                @endif
-                @if(isset($price[3]->price))
-                    {{-- <p style="margin-block: 20px"> --}}
-                        The price of a seat in economy class: 
-                        {{ $price[3]->price }} $
-                    {{-- </p> --}}
-                @endif
-                </p>
+                <div class="row">
+                    <div class="card mb-3 col-md-4" style="border-top:none; border: 1px solid #2C3E50; padding-top:15px" >
+                        <img class="img-fluid card-img-top" src='{{ asset("flightImage/{$flightSchedule->image}") }}' alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title">Flight Number: {{ $flightSchedule->id }}</h5>
+                            <p class="card-text">From Airport: {{ $flightSchedule->direction->originAirport->name }}</p>
+                            <p class="card-text">To Airport: {{ $flightSchedule->direction->destinationAirport->name }}</p>
+                            <p class="card-text">Airline: {{ $flightSchedule->airplaneFlight->airline->name }}</p>
+                            <p class="card-text">With Airplane: {{ $flightSchedule->airplaneFlight->model }}</p>
+                            <p class="card-text">Number of Seats: {{ $flightSchedule->airplaneFlight->number_of_seats }}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                            <div class="card-body table-border-style">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Class</th>
+                                                <th>First</th>
+                                                <th>Business</th>
+                                                <th>Premium Economy</th>
+                                                <th>Economy</th>
+                                            </tr>
+                                            <tr>
+                                                <th>Price</th>
+                                                <th>
+                                                    @if(isset($price[0]->price))
+                                                        {{ $price[0]->price }} $
+                                                        @else 
+                                                        0
+                                                    @endif
+                                                </th>
+                                                <th>
+                                                    @if(isset($price[1]->price))
+                                                        {{ $price[1]->price }} $
+                                                        @else 
+                                                        0
+                                                    @endif
+                                                </th>
+                                                <th>
+                                                    @if(isset($price[2]->price))
+                                                        {{ $price[2]->price }} $
+                                                        @else 
+                                                        0
+                                                    @endif
+                                                </th>
+                                                <th>
+                                                    @if(isset($price[3]->price))
+                                                        {{ $price[3]->price }} $
+                                                        @else 
+                                                        0
+                                                    @endif
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Total number</td>
+                                                <td>
+                                                    @if(isset($allSeat['First Class']))
+                                                        {{ $allSeat['First Class'] }} 
+                                                        @else 
+                                                        0
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if(isset($allSeat['Business Class']))
+                                                        {{ $allSeat['Business Class'] }} 
+                                                        @else 
+                                                        0
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if(isset($allSeat['Premium Economy Class']))
+                                                        {{ $allSeat['Premium Economy Class'] }} 
+                                                        @else 
+                                                        0
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if(isset($allSeat['Economy Class']))
+                                                        {{ $allSeat['Economy Class'] }}
+                                                    @else 
+                                                        0
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Number reserved</td>
+                                                <td>
+                                                    @if(isset($seatsCount['First Class']))
+                                                        {{ $seatsCount['First Class'] }} 
+                                                        @else 
+                                                        0
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if(isset($seatsCount['Business Class']))
+                                                        {{ $seatsCount['Business Class'] }} 
+                                                        @else 
+                                                        0
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if(isset($seatsCount['Premium Economy Class']))
+                                                        {{ $seatsCount['Premium Economy Class'] }} 
+                                                        @else 
+                                                        0
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if(isset($seatsCount['Economy Class']))
+                                                        {{ $seatsCount['Economy Class'] }} 
+                                                        @else 
+                                                        0
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                         
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
