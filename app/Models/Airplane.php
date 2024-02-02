@@ -17,4 +17,16 @@ class Airplane extends Model
     public function airplaneSeats(){
         return $this->hasMany('App\Models\AirplaneSeat');
     }
+    public static function boot(){
+        parent::boot();
+        static::saving(function(){
+            \Cache::flush();
+        });
+        static::updating(function(){
+            \Cache::flush();
+        });
+        static::deleting(function(){
+            \Cache::flush();
+        });
+    }
 }

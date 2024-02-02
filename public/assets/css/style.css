@@ -1583,3 +1583,14 @@ html,body{
 .div-input-validation>select{
     margin-bottom: 0px !important;
 }
+.div_search{
+    display: flex;
+    flex: 0 0 auto;
+    flex-flow: row wrap;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+.div_search > label {
+    margin-right: 20px !important;
+}

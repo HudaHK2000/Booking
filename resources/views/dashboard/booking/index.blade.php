@@ -19,27 +19,39 @@
                     <table class="table table-hover .table_content_center">
                         <thead>
                             <tr>
-                                <th>#</th>
                                 <th>Passenger name</th>
+                                <th>Flight Num</th>
                                 <th>Flights</th>
-                                {{-- <th>Edit</th>
-                                <th>Delete</th> --}}
+                                <th>Agree</th>
+                                <th>Not Agree</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php $count = 1; ?>
-                            @foreach ($bookings as $booking)
+                            @foreach ($bookings as $key=>$booking)
                             <tr>
-                                <td>
-                                    <?php echo $count++ ?>
-                                </td>
                                 <td style="text-transform: capitalize;">{{ $booking->passenger->first_name }} {{ $booking->passenger->last_name }}</td>
+                                <td>{{ $booking->flightSeat->flightSchedule->id }}</td>
                                 <td style="text-transform: capitalize;">
                                     <a href='{{ url("flightSchedule/{$booking->flightSeat->flightSchedule->id}") }}'>From {{ $booking->flightSeat->flightSchedule->direction->originAirport->city->name }} 
                                         To {{ $booking->flightSeat->flightSchedule->direction->destinationAirport->city->name }}
-                                   </a>    
+                                    </a>    
                                 </td>
- 
+                                <td>
+                                    <form method="post" action='{{ url("") }}'>
+                                        @csrf
+                                        <button type="submit" class="btn btn-outline-success" >
+                                            Agree
+                                        </button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <form method="post" action='{{ url("") }}'>
+                                        @csrf
+                                        <button type="submit" class="btn btn-outline-danger" >
+                                            Not Agree
+                                        </button>
+                                    </form>
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>

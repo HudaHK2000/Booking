@@ -17,4 +17,16 @@ class Direction extends Model
     public function destinationAirport(){
         return $this->belongsTo('App\Models\Airport','destination_airport_code','id');
     }
+    public static function boot(){
+        parent::boot();
+        static::saving(function(){
+            \Cache::flush();
+        });
+        static::updating(function(){
+            \Cache::flush();
+        });
+        static::deleting(function(){
+            \Cache::flush();
+        });
+    }
 }

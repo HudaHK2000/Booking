@@ -1,4 +1,4 @@
-@extends('layouts.app')
+{{-- @extends('layouts.app')
 
 @section('content')
 <div class="container">
@@ -70,4 +70,62 @@
         </div>
     </div>
 </div>
+@endsection --}}
+
+@extends('layouts.login_register')
+@section('title')
+    Login
+@endsection
+@section('content')
+    <!-- [ auth-signin ] start -->
+    <div class="auth-wrapper">
+        <div class="auth-content text-center">
+            <div class="card borderless">
+                <div class="row align-items-center ">
+                    <div class="col-md-12">
+                        <div class="card-body">
+                            <form method="POST" action="{{ route('login') }}">
+                                @csrf
+                                <h4 class="mb-3 f-w-400">Login</h4>
+                                <hr>
+                                <div class="form-group mb-3">
+                                    <input type="email" id="email" placeholder="Email address" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                                    @error('email')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                                <div class="form-group mb-4">
+                                    <input type="password" id="password" placeholder="Password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+                                    @error('password')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                                {{-- <div class="custom-control custom-checkbox text-left mb-4 mt-2">
+                                    <input type="checkbox" class="custom-control-input" id="customCheck1">
+                                    <label class="custom-control-label" for="customCheck1">Save credentials.</label>
+                                </div> --}}
+                                <button class="btn btn-block btn-primary mb-4">{{ __('Login') }}</button>
+                                <hr>
+                                <p class="mb-2 text-muted">
+                                    @if (Route::has('password.request'))
+                                    <a class="btn-link" href="{{ route('password.request') }}">
+                                        {{ __('Forgot Your Password?') }}
+                                    </a>
+                                @endif
+                                </p>
+                                <p class="mb-0 text-muted">Don’t have an account? 
+                                    <a class="btn-link" href="{{ route('register') }}" >{{ __('Register') }}</a>
+                                </p>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- [ auth-signin ] end -->
 @endsection

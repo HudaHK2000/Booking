@@ -19,6 +19,81 @@
             </div>   
             <div class="card-body table-border-style">
                 <div class="table-responsive">
+                    <form class="form-group" action="{{ url('flightSchedule') }}">
+                        @csrf
+                        <div class="row">
+                            <div class="form-group col-md-3 col-sm-6 @error('origin_airport_code') input-was-validated @enderror">
+                                <label for="inputFromAirport">From Airport:</label>
+                                <select id="inputFromAirport" class="form-control" name="search_origin_airport">
+                                    <option value="">select airport:</option>
+                                    @foreach ($airports as $airport)
+                                        <option value="{{ $airport->id }}" {{ (old('search_origin_airport') == $airport->id) ? 'selected' : '' }}>
+                                            {{ $airport->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group col-md-3 col-sm-6">
+                                <label for="inputToAirport">To Airport:</label>
+                                <select id="inputToAirport" class="form-control" name="search_destination_airport">
+                                    <option value="">select airport:</option>
+                                    @foreach ($airports as $airport)
+                                        <option value="{{ $airport->id }}" {{ (old('search_destination_airport') == $airport->id) ? 'selected' : '' }}>
+                                            {{ $airport->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group col-md-3 col-sm-6">
+                                <label for="inputAirline">Airline</label>
+                                <select id="inputAirline" class="form-control" name="search_airline">
+                                    <option selected="" value="">select Airline</option>
+                                    @foreach ($airlines as $airline )
+                                        <option @if(old('search_airline')== $airline->id) selected @endif value="{{$airline->id}}">{{$airline->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group col-md-3 col-sm-6">
+                                <label for="inputAirplane">Airplane:</label>
+                                <select id="inputAirplane" class="form-control" name="search_airplane">
+                                    <option selected="" value="">select Airplane:</option>
+                                    @foreach ($airplanes as $key=>$airplane )
+                                        <option 
+                                        @if(old('search_airplane')== $airplane->id)selected @endif
+                                        value="{{$airplane->id}}" > {{$airplane->model}} </option>
+                                    @endforeach
+                                </select>   
+                            </div>
+                            <div class="form-group col-md-3 col-sm-6">
+                                <label for="inputFlightStatu">Flight Statu:</label>
+                                <select id="inputFlightStatu" class="form-control" name="search_flight_status">
+                                    <option selected="" value="">select Flight Statu:</option>
+                                    @foreach ($flightStatus as $key=>$flightStatu )
+                                        <option 
+                                        @if(old('search_flight_status')== $flightStatu->id)selected @endif
+                                        value="{{$flightStatu->id}}" > {{$flightStatu->name}} </option>
+                                    @endforeach
+                                </select>   
+                            </div>
+                            <div class="form-group col-lg-3 col-md-4 col-sm-6 div_search">
+                                <label for="inputSearchDateDeparture" class="" style="margin-right: 10px">departure:</label>
+                                <input type="date" name="searchDateDeparture" value="{{app('request')->input('searchDateDeparture')}}" class="form-control" id="inputSearchDateDeparture" placeholder="">
+                            </div>
+                            <div class="form-group col-lg-3 col-md-4 col-sm-6 div_search">
+                                <label for="inputSearchTeteArrival" class="" style="margin-right: 10px">arrival:</label>
+                                <input type="date" name="searchDateArrival"  value="{{app('request')->input('searchDateArrival')}}" class="form-control" id="inputSearchDateArrival" placeholder="">
+                            </div>
+                            <div class="form-group col-lg-3 col-md-4 col-sm-6 mb-2"
+                            style="display: flex; align-items: flex-end;">
+                                {{-- <label for="inputSearchTeteArrival" class="" style="margin-right: 10px"></label> --}}
+
+                                <button type="submit" class="btn btn-primary mb-2" style="width: 140px;">Search</button>
+                            </div>
+                        </div>
+                        {{-- <div class="row" style="flex-direction: row-reverse;">
+                            <button type="submit" class="btn  btn-primary mb-2" style="width: 140px;">Search</button>
+                        </div> --}}
+                    </form>
                     @if (session()->has('success'))
                     <div class="offset-lg-1 alert alert-primary alert-dismissible fade show col-lg-10" role="alert">
                         <strong>{{ session()->get('success') }}</strong>
@@ -30,7 +105,7 @@
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th>#</th>
+                                <th>Num</th>
                                 <th>From Airpot</th>
                                 <th>To Airport</th>
                                 <th>Image</th>
@@ -47,9 +122,10 @@
                         <tbody>
                             @foreach ($flightSchedules as $key=>$flightSchedule)
                             <tr style="align-items: center;align-content: center;">
-                                <td class="center">
+                                <td >{{ $flightSchedule->id }}</td>
+                                {{-- <td class="center">
                                     {{ $key+1 }}
-                                </td>
+                                </td> --}}
                                 <td style="text-transform: capitalize;">{{ $flightSchedule->direction->originAirport->name }}</td>
                                 <td style="text-transform: capitalize;">{{ $flightSchedule->direction->destinationAirport->name }}</td>
                                 <td>
@@ -57,23 +133,23 @@
                                 <td>{{ $flightSchedule->airplaneFlight->airline->name }}</td>
                                 <td>{{ $flightSchedule->airplaneFlight->model }}</td>
                                 <td>
-                                    @if ($flightSchedule->flightStatu->name == 'Done')
-                                        <span  class="btn btn-outline-info" >
-                                            <i class="feather mr-2 icon-check-circle"></i>
-                                            {{ $flightSchedule->flightStatu->name }}
-                                        </span>
-                                    @elseif ($flightSchedule->flightStatu->name == 'Waiting')
-                                        <span  class="btn btn-outline-info" >
-                                            <i class="feather mr-2 icon-info"></i>
-                                            {{ $flightSchedule->flightStatu->name }}
-                                        </span>
-                                    @endif
-                                  
+                                    <form action='{{ url("update-flight-status/{$flightSchedule->id}") }}' method="post">
+                                        @csrf
+                                        <div class="form-group" >
+                                            <select id="ChangeFlightStatu" class="form-control ChangeFlightStatu" name="flight_statu" style="width: 150px">
+                                                @foreach ($flightStatus as $flightStatu )
+                                                    <option 
+                                                    @if($flightSchedule->flightStatu->id== $flightStatu->id)selected @endif
+                                                    value="{{$flightStatu->id}}" > {{$flightStatu->name}} </option>
+                                                @endforeach
+                                            </select>   
+                                        </div>
+                                    </form>
                                 </td>
                                 <td>{{ $flightSchedule->departure_time }}</td>
                                 <td>{{ $flightSchedule->arrival_time }}</td>
                                 <td>
-                                    <a href='{{ url("flightSeatPrice/$flightSchedule->id") }}' class="btn  btn-outline-success">
+                                    <a href='{{ url("flightSeatPrice/$flightSchedule->id") }}' class="btn btn-outline-success">
                                         Add Price
                                     </a>
                                 </td>
@@ -95,10 +171,38 @@
                             @endforeach
                         </tbody>
                     </table>
-                    {!! $flightSchedules->links() !!}
+                    {{-- {!! $flightSchedules->links() !!} --}}
                 </div>
             </div>
         </div>
     </div>
 </div>
+@endsection
+@section('script')
+<script>
+    $(document).ready(function(){
+        $('.ChangeFlightStatu').change(function(){
+            var flightId = $(this).closest('tr').find('td:first').text();
+            var newStatusId = $(this).val();
+            var urlAirplaneSeat =$(this).closest('form').attr('action');
+console.log(flightId,newStatusId,urlAirplaneSeat);
+            $.ajax({
+                url: urlAirplaneSeat,
+                type: 'POST',
+                data: {
+                    'flightId': flightId,
+                    'newStatusId': newStatusId,
+                    '_token': '{{ csrf_token() }}'
+                },
+                success: function(response){
+                    // يمكنك إضافة رسالة تأكيد هنا أو تحديث الصفحة بشكل آخر
+                    console.log(response);
+                },
+                error: function(xhr, status, error){
+                    console.error(error);
+                }
+            });
+        });
+    });
+</script>
 @endsection

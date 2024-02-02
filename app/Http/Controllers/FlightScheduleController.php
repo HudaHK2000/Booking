@@ -8,6 +8,7 @@ use App\Models\Airline;
 use App\Models\Airplane;
 use App\Models\FlightStatu;
 use App\Models\FlightSeatPrice;
+use App\Models\Airport;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use App\Traits\ImageTrait;
@@ -23,12 +24,68 @@ class FlightScheduleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $flightSchedules = FlightSchedule::paginate(4);
-        return view('dashboard.flightSchedule.index',compact('flightSchedules'));
-
+        $flightSchedules = FlightSchedule::with('direction');
+        if($request->search_origin_airport){
+            $flightSchedules= $flightSchedules->
+            whereHas('direction.originAirport', function($query) use($request) {
+                $query->where('id',$request->search_origin_airport);
+            });
+        }
+        if($request->search_destination_airport){
+            $flightSchedules= $flightSchedules->
+            whereHas('direction.destinationAirport', function($query) use($request) {
+                $query->where('id',$request->search_destination_airport);
+            });
+        }
+        if($request->search_airline){
+            $flightSchedules= $flightSchedules->
+                whereHas('airplaneFlight.airline', function($query) use($request) {
+                    $query->Where('id',$request->search_airline);
+                });
+        }
+        if($request->search_airplane){
+            $flightSchedules= $flightSchedules->
+                whereHas('airplaneFlight', function($query) use($request) {
+                    $query->Where('id',$request->search_airplane);
+                });
+        }
+        if($request->search_flight_status){
+            $flightSchedules= $flightSchedules->
+                whereHas('flightStatu', function($query) use($request) {
+                    $query->Where('id',$request->search_flight_status);
+                });
+        }
+        if($request->searchDateDeparture){
+            $flightSchedules = $flightSchedules->whereDate('departure_time', '>=', $request->searchDateDeparture.' 00:00:00');
+            $flightSchedules = $flightSchedules->whereDate('departure_time', '<=', $request->searchDateDeparture.' 23:59:59');
+        }
+        if($request->searchDateArrival){
+            $flightSchedules = $flightSchedules->where('arrival_time', '>=', $request->searchDateArrival.' 00:00:00');
+            $flightSchedules = $flightSchedules->where('arrival_time', '<=', $request->searchDateArrival.' 23:59:59');
+        }
+        $flightSchedules = $flightSchedules->get();
+        $airports = Cache('airports');
+        $airlines = Cache('airlines');
+        $airplanes = Cache('airplanes');
+        $flightStatus = Cache('flightStatu');
+        // dd($flightStatu);
+        return view('dashboard.flightSchedule.index',compact(['flightSchedules','airports','airlines','airplanes','flightStatus']));
     }
+    public function updateFlightStatus(Request $request){
+        // dd($flightId,$request->newStatusId);
+
+        try{
+            $flightSchedule = FlightSchedule::find($request->flightId);
+            $flightSchedule->update(['flight_status_id' => $request->newStatusId]);
+            return response()->json(['state'=> true , 'message'=>'Flight status updated successfully'],200);
+        }
+        catch(\Exception $e){
+            return response()->json(['state'=> false , 'message'=> $e->getMessage()],500);
+        }
+    }
+    
 
     /**
      * Show the form for creating a new resource.
@@ -126,18 +183,20 @@ class FlightScheduleController extends Controller
      */
     public function show(FlightSchedule $flightSchedule)
     {
+        // اعادة انواع الكراسي للطائرة الذاهبة بهذه الرحلة
         $classes = FlightSeatPrice::where('flight_id', $flightSchedule->id)
         ->with('seat.travelClass')
         ->get()
         ->pluck('seat.travelClass')
         ->unique('id');
-        // dd($classes);
+        // جلب اسعار الكراسي لهذه الطائرة
         for( $i = 0 ; $i < 4 ; $i++){
             $price[$i] = FlightSeatPrice::where('flight_id', $flightSchedule->id)
             ->whereHas('seat', function($query) use ($i) {
                 $query->where('travel_class_id', $i+1 );
             })->first();
         }
+        // معرفة عدد الكراسي في كل نوع من انواع الكراسي
         $allSeat = [];
         foreach($classes as $class) {
             $allSeat[$class->name] = FlightSeatPrice::where('flight_id', $flightSchedule->id)
@@ -146,6 +205,7 @@ class FlightScheduleController extends Controller
             })->count();
         }
         // dd($allSeat);
+        // جلب عدد الكراسي غير المحجوزة لكل نوع في هذه الرحلة
         $seatsCount = [];
         foreach($classes as $class) {
             $seatsCount[$class->name] = FlightSeatPrice::where('flight_id', $flightSchedule->id)
@@ -154,10 +214,6 @@ class FlightScheduleController extends Controller
                     $query->where('travel_class_id', $class->id);
                 })->count();
         }
-
-        // الآن يمكنك عرض عدد الكراسي التي تم حجزها لكل نوع من الأنواع
-        // dd($seatsCount);
-
         return view('dashboard.flightSchedule.show',compact(['flightSchedule','price','seatsCount','allSeat']));
     }
 

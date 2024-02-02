@@ -15,4 +15,16 @@ class City extends Model
     public function airport(){
         return $this->hasOne('App\Models\Airport');
     }
+    public static function boot(){
+        parent::boot();
+        static::saving(function(){
+            \Cache::flush();
+        });
+        static::updating(function(){
+            \Cache::flush();
+        });
+        static::deleting(function(){
+            \Cache::flush();
+        });
+    }
 }

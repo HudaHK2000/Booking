@@ -86,7 +86,7 @@ class BookingController extends Controller
         // dd($selectedClass,$childs , $adults);
         // قم بحساب السعر بناءً على عدد البالغين والأطفال والفئة المختارة
         $totalPrice = $this->calculatePrice($adults, $childs, $selectedClass, $flightId);
-        
+        // dd($total_price);
         return response()->json(['totalPrice' => $totalPrice]);
     }
     private function calculatePrice($adults, $childs, $selectedClass, $flightId){

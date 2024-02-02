@@ -61,6 +61,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('flightSchedule', FlightScheduleController::class);
     Route::get('/getAirplanesByAirline/{airlineId}', [FlightScheduleController::class,'getAirplanesByAirline']);
     Route::get('flightSchedule', [FlightScheduleController::class,'index']);
+    Route::post('/update-flight-status/{id}', [FlightScheduleController::class,'updateFlightStatus']);
+
     
     // Route::resource('flightSeatPrice', FlightSeatPriceController::class);
     Route::get('/flightSeatPrice/{flightSchedule_id}', [FlightSeatPriceController::class,'create']);

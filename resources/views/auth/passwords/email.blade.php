@@ -1,4 +1,4 @@
-@extends('layouts.app')
+{{-- @extends('layouts.app')
 
 @section('content')
 <div class="container">
@@ -44,4 +44,47 @@
         </div>
     </div>
 </div>
+@endsection --}}
+
+@extends('layouts.login_register')
+@section('title')
+    Register
+@endsection
+@section('content')
+    <!-- [ auth-signin ] start -->
+    <div class="auth-wrapper">
+        <div class="auth-content text-center">
+            <div class="card borderless">
+                <div class="row align-items-center ">
+                    <div class="col-md-12">
+                        @if (session('status'))
+                        <div class="alert alert-success" role="alert">
+                            {{ session('status') }}
+                        </div>
+                        @endif
+                        <div class="card-body">
+                            <form method="POST" action="{{ route('password.email') }}">
+                                @csrf
+                                <h4 class="mb-3 f-w-400">Reset Password</h4>
+                                <hr>
+                                <div class="form-group mb-3">
+                                    <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" placeholder="Enter Your Email" required autocomplete="email" autofocus>
+
+                                    @error('email')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                                <button class="btn btn-block btn-primary mb-4">
+                                    {{ __('Send Password Reset Link') }}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- [ auth-signin ] end -->
 @endsection

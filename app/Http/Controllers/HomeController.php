@@ -27,8 +27,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $countries = Country::all();
-        $classes = TravelClass::all();
+        // $countries = Country::all();
+        // $classes = TravelClass::all();
+        $countries = Cache('countries');
+        $classes = Cache('classes');
         $flightSchedules = FlightSchedule::where('departure_time', '>', now()->toDateTimeString())->get();
         return view('frontend.index',compact(['countries','classes','flightSchedules']));
     }
@@ -82,11 +84,6 @@ class HomeController extends Controller
             $flights = $flights->where('arrival_time', '<=' , $request->date_return.' 23:59:59');
         }
         if($request->adults + $request->childs){
-            // dd($flights);
-
-        //     $available_seats = FlightSeatPrice::where('flight_id', $flights->id)
-        //         ->where('book', 0)->get();
-        // dd($available_seats);
             $flights = $flights->whereHas('airplaneFlight', function($query) use ($request) {
                 $query->where('number_of_seats', '>=', $request->adults + $request->childs );
             });
